@@ -20,9 +20,11 @@ class Button:
         self.button_rect = None
 
         self.coordinate_position = kwargs.pop("coordinate_position", "center")
+
         self.font_type = kwargs.pop("font_type", "Microsoft Sans Serif")
         self.max_font_size = kwargs.pop("max_font_size", 60)
         self.text_color = kwargs.pop("text_color", "black")
+
         self.button_color = kwargs.pop("button_color", "white")
         self.x_offset = kwargs.pop("x_offset", 0)
         self.y_offset = kwargs.pop("y_offset", 0)

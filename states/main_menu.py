@@ -20,8 +20,18 @@ class MainMenu(State):
             1 / 4,
             1 / 10,
             text="Klassekart",
-            x_offset=10,
+            x_offset=-10,
             coordinate_position="topright",
+        )
+
+        self.groups_button = Button(
+            0.5,
+            1 / 4,
+            1 / 4,
+            1 / 10,
+            text="Grupper",
+            x_offset=10,
+            coordinate_position="topleft",
         )
 
     def update(self, events: list[Event], deltatime: float) -> None:
@@ -44,4 +54,5 @@ class MainMenu(State):
         return [
             window.fill(self.colors[self.current_color]),
             self.class_list_button.draw(window, screen_width, screen_height),
+            self.groups_button.draw(window, screen_width, screen_height),
         ]
