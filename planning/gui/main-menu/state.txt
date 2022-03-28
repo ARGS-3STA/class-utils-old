@@ -1,1 +1,6 @@
-
+Responsibilities:
+Velge mellom klasseliste- og gruppegenerator
+Overgang til staten med eventuelle innstillinger
+Quitting
+Background animation (gradient)?
+  Performance down the drain 🥵
