@@ -5,7 +5,7 @@ from application import App
 
 
 def main() -> None:
-    # main
+    # main 2
     BASE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
     ASSETS_DIRECTORY = os.path.join(BASE_DIRECTORY, "assets")
 
