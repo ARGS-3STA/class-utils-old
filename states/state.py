@@ -1,6 +1,19 @@
-from application import App
+from typing import Protocol
+
+import pygame
 from pygame import Surface
 from pygame.event import Event
+
+
+class App(Protocol):
+    def add_state(self, state) -> None:
+        raise NotImplementedError()
+
+    def pop_state(self) -> None:
+        raise NotImplementedError()
+
+    def quit(self) -> None:
+        raise NotImplementedError()
 
 
 class State:
