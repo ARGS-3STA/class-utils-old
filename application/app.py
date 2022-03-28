@@ -23,27 +23,27 @@ class State(Protocol):
 
 class App:
     def __init__(self, screen_width: int, screen_height: int, title: str, **kwargs):
-        self.screen_width = screen_width
-        self.screen_height = screen_height
+        self._screen_width = screen_width
+        self._screen_height = screen_height
 
         pygame.init()
         pygame.font.init()
 
-        self.window = pygame.display.set_mode((screen_width, screen_height))
+        self._window = pygame.display.set_mode((screen_width, screen_height))
         pygame.display.set_caption(title)
 
-        self.state_stack: list[State] = []
+        self._state_stack: list[State] = []
         main_menu = MainMenu(self)
         main_menu.enter()
 
-        self.clock = pygame.time.Clock()
-        self.fps = kwargs.pop("fps", 60)
+        self._clock = pygame.time.Clock()
+        self._fps = kwargs.pop("fps", 60)
 
     def add_state(self, state: State) -> None:
-        self.state_stack.append(state)
+        self._state_stack.append(state)
 
     def pop_state(self) -> None:
-        self.state_stack.pop()
+        self._state_stack.pop()
 
     def quit(self) -> None:
         pygame.quit()
@@ -51,14 +51,14 @@ class App:
 
     def run(self) -> None:
         while True:
-            if not self.state_stack:
+            if not self._state_stack:
                 self.quit()
 
-            current_state = self.state_stack[-1]
+            current_state = self._state_stack[-1]
 
             events = pygame.event.get()
-            deltatime = self.clock.tick(self.fps)
+            deltatime = self._clock.tick(self._fps) / 1000
             current_state.update(events, deltatime)
 
-            update_area = current_state.draw(self.window)
+            update_area = current_state.draw(self._window)
             pygame.display.update(update_area)
