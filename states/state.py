@@ -22,7 +22,9 @@ class State:
     def update(self, events: list[Event], deltatime: float) -> None:
         raise NotImplementedError()
 
-    def draw(self, window: Surface) -> list[Rect | None]:
+    def draw(
+        self, window: Surface, screen_width: int, screen_height: int
+    ) -> list[Rect | None]:
         raise NotImplementedError()
 
     def enter(self) -> None:
