@@ -34,6 +34,8 @@ class MainMenu(State):
             coordinate_position="topleft",
         )
 
+        self.quit_button = Button(2 / 4, 2 / 4, 1 / 4, 1 / 10, text="Avslutt")
+
     def update(self, events: list[Event], deltatime: float) -> None:
         self.updated = False
 
@@ -50,6 +52,8 @@ class MainMenu(State):
                         print("Clicked class list button")
                     elif self.groups_button.is_pressed(mouse_pos):
                         print("clicked group button")
+                    elif self.quit_button.is_pressed(mouse_pos):
+                        self.app.quit()
 
     def draw(
         self, window: Surface, screen_width: int, screen_height: int
@@ -61,4 +65,5 @@ class MainMenu(State):
             window.fill(self.colors[self.current_color]),
             self.class_list_button.draw(window, screen_width, screen_height),
             self.groups_button.draw(window, screen_width, screen_height),
+            self.quit_button.draw(window, screen_width, screen_height),
         ]
