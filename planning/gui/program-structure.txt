@@ -1,3 +1,5 @@
+Pygame moment
+
 Bruker states for å bestemme hva som vises til skjermen.
 Første state blir en form for main menu
 States legges til i en stack og poppes for å gå ut av staten
