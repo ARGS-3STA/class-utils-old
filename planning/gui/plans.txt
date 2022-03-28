@@ -1,1 +1,12 @@
+Bruker states for å bestemme hva som vises til skjermen.
+Første state blir en form for main menu
+States legges til i en stack og poppes for å gå ut av staten
+Hver nye form for view/display burde være en egen state
 
+Hver state har en draw og en update funksjon
+Draw tar window som input og drawer til det
+Update tar user actions og deltatime og oppdaterer seg selv
+
+Vi har en main class som styrer main loop, stacken, quitting osv.
+Caller draw funksjonen til current state hver frame
+Current frame avgjør i sin draw funksjon om noe burde drawes på nytt (don't know how yet)
