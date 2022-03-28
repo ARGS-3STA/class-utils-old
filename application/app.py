@@ -60,5 +60,7 @@ class App:
             deltatime = self._clock.tick(self._fps) / 1000
             current_state.update(events, deltatime)
 
-            update_area = current_state.draw(self._window)
+            update_area = current_state.draw(
+                self._window, self._screen_width, self._screen_height
+            )
             pygame.display.update(update_area)

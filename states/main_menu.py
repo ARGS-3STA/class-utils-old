@@ -1,6 +1,7 @@
 import pygame
 from pygame import Rect, Surface
 from pygame.event import Event
+from ui_components import Button
 
 from .state import App, State
 
@@ -13,6 +14,16 @@ class MainMenu(State):
         self.colors = [(0, 0, 0), (255, 255, 255)]
         self.current_color = 0
 
+        self.class_list_button = Button(
+            0.5,
+            1 / 4,
+            1 / 4,
+            1 / 10,
+            text="Klassekart",
+            x_offset=10,
+            coordinate_position="topright",
+        )
+
     def update(self, events: list[Event], deltatime: float) -> None:
         self.updated = False
 
@@ -24,8 +35,13 @@ class MainMenu(State):
                     self.updated = True
                     self.current_color = (self.current_color + 1) % 2
 
-    def draw(self, window: Surface) -> list[Rect | None]:
+    def draw(
+        self, window: Surface, screen_width: int, screen_height: int
+    ) -> list[Rect | None]:
         if not self.updated:
             return [None]
 
-        return [window.fill(self.colors[self.current_color])]
+        return [
+            window.fill(self.colors[self.current_color]),
+            self.class_list_button.draw(window, screen_width, screen_height),
+        ]
