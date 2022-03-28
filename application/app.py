@@ -2,15 +2,16 @@ import sys
 from typing import Protocol
 
 import pygame
-from pygame import Surface
+from pygame import Rect, Surface
 from pygame.event import Event
+from states import MainMenu
 
 
 class State(Protocol):
     def update(self, events: list[Event], deltatime: float) -> None:
         raise NotImplementedError()
 
-    def draw(self, window: Surface) -> None:
+    def draw(self, window: Surface) -> list[Rect | None]:
         raise NotImplementedError()
 
     def enter(self) -> None:
@@ -31,6 +32,8 @@ class App:
         pygame.display.set_caption(title)
 
         self.state_stack: list[State] = []
+        main_menu = MainMenu(self)
+        main_menu.enter()
 
         self.clock = pygame.time.Clock()
         self.fps = kwargs.pop("fps", 60)
@@ -56,4 +59,5 @@ class App:
             deltatime = self.clock.tick(self.fps)
             current_state.update(events, deltatime)
 
-            current_state.draw(self.window)
+            update_area = current_state.draw(self.window)
+            pygame.display.update(update_area)

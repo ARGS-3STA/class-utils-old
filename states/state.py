@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from pygame import Surface
+from pygame import Rect, Surface
 from pygame.event import Event
 
 
@@ -22,7 +22,7 @@ class State:
     def update(self, events: list[Event], deltatime: float) -> None:
         raise NotImplementedError()
 
-    def draw(self, window: Surface) -> None:
+    def draw(self, window: Surface) -> list[Rect | None]:
         raise NotImplementedError()
 
     def enter(self) -> None:
