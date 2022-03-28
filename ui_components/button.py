@@ -64,7 +64,7 @@ class Button:
         return window.blit(button_surf, self.button_rect)
 
     def is_pressed(self, mouse_pos):
-        if not self.button_rect:
+        if self.button_rect is None:
             return False
 
         return self.button_rect.collidepoint(mouse_pos)
