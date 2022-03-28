@@ -1,5 +1,6 @@
-"hehe"
-"not hehe"
-print("not hehe")
+def main() -> None:
+    pass
 
-# Tien was here
+
+if __name__ == "__main__":
+    main()
