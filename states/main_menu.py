@@ -44,6 +44,12 @@ class MainMenu(State):
                 case pygame.KEYDOWN if event.key == pygame.K_f:
                     self.updated = True
                     self.current_color = (self.current_color + 1) % 2
+                case pygame.MOUSEBUTTONDOWN if event.button == 1:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if self.class_list_button.is_pressed(mouse_pos):
+                        print("Clicked class list button")
+                    elif self.groups_button.is_pressed(mouse_pos):
+                        print("clicked group button")
 
     def draw(
         self, window: Surface, screen_width: int, screen_height: int
