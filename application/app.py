@@ -27,6 +27,7 @@ class App:
         self.screen_height = screen_height
 
         pygame.init()
+        pygame.font.init()
 
         self.window = pygame.display.set_mode((screen_width, screen_height))
         pygame.display.set_caption(title)
