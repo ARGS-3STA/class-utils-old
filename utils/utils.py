@@ -12,9 +12,9 @@ def get_dynamic_font(
         font_size = (low + high) // 2
         font = SysFont(font_type, font_size)
 
-        text_surf = font.render(text, True, (0, 0, 0))
+        width, height = font.size(text)
 
-        if text_surf.get_width() > max_width or text_surf.get_height() > max_height:
+        if width > max_width or height > max_height:
             high = font_size - 1
         else:
             low = font_size + 1
