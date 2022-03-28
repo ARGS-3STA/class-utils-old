@@ -1,6 +1,5 @@
 from typing import Protocol
 
-import pygame
 from pygame import Surface
 from pygame.event import Event
 
