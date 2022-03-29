@@ -1,5 +1,7 @@
 from tkinter import font
 
+import pygame
+from pygame import Surface, Rect
 from pygame.font import Font, SysFont
 
 
@@ -26,3 +28,31 @@ def get_dynamic_font(
 def lowest_font(text_data: list[tuple[int, int, str, str, int]]) -> Font:
     fonts = (get_dynamic_font(*data) for data in text_data)
     return min(fonts, key=lambda font: font.get_height())
+
+
+def gradientRect(
+    left_colour: tuple[int, int, int],
+    right_colour: tuple[int, int, int],
+    target_rect: Rect,
+) -> tuple[Surface, Rect]:
+    colour_rect = pygame.Surface((2, 2))
+    pygame.draw.line(colour_rect, left_colour, (0, 0), (0, 1))
+    pygame.draw.line(colour_rect, right_colour, (1, 0), (1, 1))
+    colour_rect = pygame.transform.smoothscale(
+        colour_rect, (target_rect.width, target_rect.height)
+    )
+    return colour_rect, target_rect
+
+
+def create_gradient(
+    colors: list[tuple[int, int, int]], window_width: int, window_height: int
+) -> tuple[Surface, int]:
+    width, height = window_width // 2, window_height
+    gradient = pygame.Surface((width * (len(colors) - 1), height))
+    for i in range(len(colors) - 1):
+        gradient.blit(
+            *gradientRect(
+                colors[i], colors[i + 1], pygame.Rect(i * width, 0, width, height)
+            )
+        )
+    return gradient, width

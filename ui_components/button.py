@@ -1,3 +1,4 @@
+import pygame
 import utils
 from pygame import Rect, Surface
 from pygame.font import Font
@@ -22,13 +23,14 @@ class Button:
 
         self.coordinate_position = kwargs.pop("coordinate_position", "center")
 
-        self.font_type = kwargs.pop("font_type", "Microsoft Sans Serif")
+        self.font_type = kwargs.pop("font_type", "bahnschrif")
         self.max_font_size = kwargs.pop("max_font_size", 60)
         self.text_color = kwargs.pop("text_color", "black")
         self.font = None
 
         self.button_color = kwargs.pop("button_color", "white")
         self.button_hover_color = kwargs.pop("button_hover_color", "grey")
+        self.button_border_radius = kwargs.pop("button_border_radius", 0.01)
 
         self.current_button_color = self.button_color
 
@@ -45,7 +47,6 @@ class Button:
         width, height = self.width * screen_width, self.height * screen_height
 
         button_surf = Surface((width, height))
-        button_surf.fill(self.current_button_color)
 
         match self.coordinate_position:
             case "center":
@@ -58,6 +59,13 @@ class Button:
                 self.button_rect = button_surf.get_rect(bottomright=(x, y))
             case "bottomleft":
                 self.button_rect = button_surf.get_rect(bottomleft=(x, y))
+
+        update_area = pygame.draw.rect(
+            window,
+            self.current_button_color,
+            self.button_rect,
+            border_radius=int(screen_width * self.button_border_radius),
+        )
 
         if self.text:
             if self.font is None:
@@ -72,13 +80,11 @@ class Button:
                 font = self.font
 
             text_surf = font.render(self.text, True, self.text_color)
-            text_rect = text_surf.get_rect(
-                center=(self.button_rect.width / 2, self.button_rect.height / 2)
-            )
+            text_rect = text_surf.get_rect(center=self.button_rect.center)
 
-            button_surf.blit(text_surf, text_rect)
+            window.blit(text_surf, text_rect)
 
-        return window.blit(button_surf, self.button_rect)
+        return update_area
 
     def check_hover(self, mouse_pos) -> bool:
         if self.button_rect is None:
