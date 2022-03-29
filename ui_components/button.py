@@ -26,8 +26,14 @@ class Button:
         self.text_color = kwargs.pop("text_color", "black")
 
         self.button_color = kwargs.pop("button_color", "white")
+        self.button_hover_color = kwargs.pop("button_hover_color", "grey")
+
+        self.current_button_color = self.button_color
+
         self.x_offset = kwargs.pop("x_offset", 0)
         self.y_offset = kwargs.pop("y_offset", 0)
+
+        self.is_hovered = False
 
     def draw(self, window: Surface, screen_width: int, screen_height: int) -> Rect:
         x, y = (
@@ -37,7 +43,7 @@ class Button:
         width, height = self.width * screen_width, self.height * screen_height
 
         button_surf = Surface((width, height))
-        button_surf.fill(self.button_color)
+        button_surf.fill(self.current_button_color)
 
         match self.coordinate_position:
             case "center":
@@ -64,8 +70,26 @@ class Button:
             button_surf.blit(text_surf, text_rect)
 
         return window.blit(button_surf, self.button_rect)
+    
+    def check_hover(self, mouse_pos) -> bool:
+        if self.button_rect is None:
+            return False
 
-    def is_pressed(self, mouse_pos):
+        was_hovered = self.is_hovered
+
+        self.is_hovered = self.button_rect.collidepoint(mouse_pos)
+
+        if self.is_hovered == was_hovered:
+            return False
+        
+        if self.is_hovered:
+            self.current_button_color = self.button_hover_color
+        else:
+            self.current_button_color = self.button_color
+        
+        return True
+
+    def is_pressed(self, mouse_pos) -> bool:
         if self.button_rect is None:
             return False
 

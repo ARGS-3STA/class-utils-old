@@ -54,6 +54,14 @@ class MainMenu(State):
                         print("clicked group button")
                     elif self.quit_button.is_pressed(mouse_pos):
                         self.app.quit()
+                case pygame.MOUSEMOTION:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if self.class_list_button.check_hover(mouse_pos):
+                        self.updated = True
+                    if self.groups_button.check_hover(mouse_pos):
+                        self.updated = True
+                    if self.quit_button.check_hover(mouse_pos):
+                        self.updated = True
 
     def draw(
         self, window: Surface, screen_width: int, screen_height: int
