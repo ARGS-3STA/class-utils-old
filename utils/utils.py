@@ -1,10 +1,6 @@
-from tkinter import font
-
 import pygame
-from pygame import Surface, Rect
+from pygame import Rect, Surface
 from pygame.font import Font, SysFont
-
-from algorithm.class_matchmaking.matchmaking import Layout
 
 
 def get_dynamic_font(
@@ -60,7 +56,37 @@ def create_gradient(
     return gradient, width
 
 
-def amount_of_valid_seats(layout: Layout) -> int:
-    res = 0
+def check_pos(x, y, rows, cols, layout) -> bool:
+    if x < 0 or y < 0 or x == cols or y == rows:
+        return False
 
-    for 
+    return layout[y][x]
+
+
+Layout = list[list[bool]]
+
+
+def amount_of_valid_seats(layout: Layout) -> int:
+    valid_seats = 0
+    rows = len(layout)
+    cols = len(layout[0])
+
+    for y, row in enumerate(layout):
+        for x, val in enumerate(row):
+            if not val:
+                continue
+
+            if not all(
+                map(
+                    lambda x: check_pos(*x),
+                    (
+                        (x + 1, y, rows, cols, layout),
+                        (x, y + 1, rows, cols, layout),
+                        (x - 1, y, rows, cols, layout),
+                        (x, y - 1, rows, cols, layout),
+                    ),
+                )
+            ):
+                valid_seats += 1
+
+    return valid_seats
