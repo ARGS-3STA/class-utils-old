@@ -13,11 +13,11 @@ def main() -> None:
     # match = Matchmaking(ASSETS_DIRECTORY)
     # match.matchmake("klasseliste.txt")
 
-    groups = GroupMaker(os.path.join(ASSETS_DIRECTORY, "klasseliste.txt"))
-    print(groups.groups_from_amounts_of_groups(10))
+    # groups = GroupMaker(os.path.join(ASSETS_DIRECTORY, "klasseliste.txt"))
+    # print(groups.groups_from_amounts_of_groups(10))
 
-    # app = App(800, 600, "Klasseverktøy")
-    # app.run()
+    app = App(800, 600, "Klasseverktøy")
+    app.run()
 
 
 if __name__ == "__main__":

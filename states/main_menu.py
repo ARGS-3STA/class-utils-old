@@ -3,9 +3,9 @@ from typing import Any
 import pygame
 import utils
 from pygame import Rect, Surface
-from pygame.event import Event
 from ui_components import Button
 
+from .groups_state import Groups
 from .state import App, State
 
 
@@ -14,8 +14,6 @@ class MainMenu(State):
         super().__init__(app)
 
         self.updated = False
-        self.colors = ["#3575a0", (255, 255, 255)]
-        self.current_color = 0
 
         self.class_list_button = Button(
             0.5,
@@ -72,14 +70,12 @@ class MainMenu(State):
         self.updated = False
         mouse_pos = actions["MousePosition"]
 
-        if pygame.K_f in actions["KeysPressed"]:
-            self.updated = True
-            self.current_color = (self.current_color + 1) % 2
         if actions["MouseDown"]:
             if self.class_list_button.is_pressed(mouse_pos):
                 print("Clicked class list button")
             elif self.groups_button.is_pressed(mouse_pos):
-                print("clicked group button")
+                group_state = Groups(self.app)
+                group_state.enter()
             elif self.quit_button.is_pressed(mouse_pos):
                 self.app.quit()
 
