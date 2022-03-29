@@ -18,6 +18,7 @@ class App(Protocol):
 class State:
     def __init__(self, app: App):
         self.app = app
+        self.should_draw = True
 
     def update(self, events: list[Event], deltatime: float) -> None:
         raise NotImplementedError()

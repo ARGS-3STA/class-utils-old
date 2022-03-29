@@ -1,4 +1,5 @@
 import pygame
+import utils
 from pygame import Rect, Surface
 from pygame.event import Event
 from ui_components import Button
@@ -66,8 +67,21 @@ class MainMenu(State):
     def draw(
         self, window: Surface, screen_width: int, screen_height: int
     ) -> list[Rect | None]:
-        if not self.updated:
+        if not self.updated and not self.should_draw:
             return [None]
+
+        self.should_draw = False
+
+        text_data = [
+            self.class_list_button.get_text_data(screen_width, screen_height),
+            self.groups_button.get_text_data(screen_width, screen_height),
+            self.quit_button.get_text_data(screen_width, screen_height),
+        ]
+
+        font = utils.lowest_font(text_data)
+        self.class_list_button.set_font(font)
+        self.groups_button.set_font(font)
+        self.quit_button.set_font(font)
 
         return [
             window.fill(self.colors[self.current_color]),

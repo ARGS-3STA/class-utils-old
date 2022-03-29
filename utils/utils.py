@@ -1,4 +1,5 @@
 from tkinter import font
+
 from pygame.font import Font, SysFont
 
 
@@ -22,5 +23,6 @@ def get_dynamic_font(
     return font
 
 
-def lowest_font_size(*fonts: Font) -> Font:
+def lowest_font(text_data: list[tuple[int, int, str, str, int]]) -> Font:
+    fonts = (get_dynamic_font(*data) for data in text_data)
     return min(fonts, key=lambda font: font.get_height())

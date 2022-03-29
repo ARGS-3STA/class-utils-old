@@ -1,5 +1,6 @@
 import utils
 from pygame import Rect, Surface
+from pygame.font import Font
 
 
 class Button:
@@ -24,6 +25,7 @@ class Button:
         self.font_type = kwargs.pop("font_type", "Microsoft Sans Serif")
         self.max_font_size = kwargs.pop("max_font_size", 60)
         self.text_color = kwargs.pop("text_color", "black")
+        self.font = None
 
         self.button_color = kwargs.pop("button_color", "white")
         self.button_hover_color = kwargs.pop("button_hover_color", "grey")
@@ -58,9 +60,16 @@ class Button:
                 self.button_rect = button_surf.get_rect(bottomleft=(x, y))
 
         if self.text:
-            font = utils.get_dynamic_font(
-                width * 0.9, height * 0.9, self.text, self.font_type, self.max_font_size
-            )
+            if self.font is None:
+                font = utils.get_dynamic_font(
+                    width * 0.9,
+                    height * 0.9,
+                    self.text,
+                    self.font_type,
+                    self.max_font_size,
+                )
+            else:
+                font = self.font
 
             text_surf = font.render(self.text, True, self.text_color)
             text_rect = text_surf.get_rect(
@@ -70,7 +79,7 @@ class Button:
             button_surf.blit(text_surf, text_rect)
 
         return window.blit(button_surf, self.button_rect)
-    
+
     def check_hover(self, mouse_pos) -> bool:
         if self.button_rect is None:
             return False
@@ -81,12 +90,12 @@ class Button:
 
         if self.is_hovered == was_hovered:
             return False
-        
+
         if self.is_hovered:
             self.current_button_color = self.button_hover_color
         else:
             self.current_button_color = self.button_color
-        
+
         return True
 
     def is_pressed(self, mouse_pos) -> bool:
@@ -94,3 +103,15 @@ class Button:
             return False
 
         return self.button_rect.collidepoint(mouse_pos)
+
+    def set_font(self, font: Font) -> None:
+        self.font = font
+
+    def get_text_data(self, screen_width: int, screen_height: int):
+        return (
+            screen_width * self.width * 0.9,
+            screen_height * self.height * 0.9,
+            self.text,
+            self.font_type,
+            self.max_font_size,
+        )
