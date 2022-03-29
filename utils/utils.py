@@ -4,6 +4,8 @@ import pygame
 from pygame import Surface, Rect
 from pygame.font import Font, SysFont
 
+from algorithm.class_matchmaking.matchmaking import Layout
+
 
 def get_dynamic_font(
     max_width: int, max_height: int, text: str, font_type: str, max_font_size: int
@@ -56,3 +58,9 @@ def create_gradient(
             )
         )
     return gradient, width
+
+
+def amount_of_valid_seats(layout: Layout) -> int:
+    res = 0
+
+    for 
