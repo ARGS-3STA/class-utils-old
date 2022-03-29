@@ -1,14 +1,16 @@
 import os
 import pickle
+import random
 from typing import Any
 
+import utils
 from algorithm import load_class_list
 
 from .student import Student
 
 # Coordinate = tuple[int, int]
 Layout = list[list[bool]]
-PopulatedLayout = list[list[Student]]
+PopulatedLayout = list[list[Student | None]]
 
 
 class Matchmaking:
@@ -24,86 +26,7 @@ class Matchmaking:
             with open(self.layouts_file_path, "rb") as layouts_file:
                 self.layouts = pickle.load(layouts_file)
         except FileNotFoundError:
-            self.layouts = {
-                "default": [
-                    [False, False, True, True, True, False, True, True, True, True],
-                    [
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                    ],
-                    [False, False, True, True, True, False, True, True, True, True],
-                    [
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                    ],
-                    [True, True, True, False, True, True, True, True, True, True],
-                    [
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                    ],
-                    [True, True, True, False, False, True, True, True, True, True],
-                    [
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                    ],
-                    [
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                    ],
-                    [
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                        False,
-                    ],
-                ]
-            }
+            self.layouts = {}
 
     def save_layouts(self) -> None:
         with open(self.layouts_file_path, "wb") as layouts_file:
@@ -113,9 +36,27 @@ class Matchmaking:
         self.layouts[layout_name] = layout
         self.save_layouts(layout)
 
-    def matchmake(self, class_list_file_name: str) -> PopulatedLayout:
+    def matchmake(
+        self, class_list_file_name: str, layout_name: str = "default"
+    ) -> PopulatedLayout | None:
         class_list = load_class_list(
             os.path.join(self.assets_directory, class_list_file_name)
         )
 
-        print(sum([sum(row) for row in self.layouts["default"]]))
+        layout = self.layouts[layout_name]
+
+        if utils.amount_of_valid_seats(layout) < len(class_list):
+            print("Not enough seats")
+            return
+
+        random.shuffle(class_list)
+
+        populated_layout = []
+
+        for row in layout:
+            populated_layout.append([])
+            for val in row:
+                if not val:
+                    populated_layout[-1].append(None)
+                else:
+                    populated_layout[-1].append(class_list.pop())
