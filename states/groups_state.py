@@ -26,6 +26,17 @@ class Groups(State):
             text_color="white",
         )
 
+        self.generate_groups_button = Button(
+            1 / 8,
+            5 / 6,
+            4 / 20,
+            4 / 25,
+            text="LAG GRUPPER!",
+            coordinate_position="center",
+            button_color="black",
+            text_color="white",
+        )
+
     def update(self, actions, deltatime):
         self.updated = False
 
@@ -33,6 +44,8 @@ class Groups(State):
 
         if actions["MouseMotion"]:
             if self.back_button.check_hover(mouse_pos):
+                self.updated = True
+            if self.generate_groups_button.check_hover(mouse_pos):
                 self.updated = True
         if actions["MouseDown"]:
             if self.back_button.is_pressed(mouse_pos):
@@ -47,4 +60,5 @@ class Groups(State):
         return [
             window.fill((255, 255, 255)),
             self.back_button.draw(window, screen_width, screen_height),
+            self.generate_groups_button.draw(window, screen_width, screen_height),
         ]
