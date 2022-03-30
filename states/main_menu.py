@@ -10,7 +10,7 @@ from .state import App, State
 
 
 class MainMenu(State):
-    def __init__(self, app: App):
+    def __init__(self, app: App, **kwargs):
         super().__init__(app)
 
         self.updated = False
@@ -65,6 +65,7 @@ class MainMenu(State):
         self.gradient_enabled = True
         self.gradient_offset = 0
         self.gradient_width = 0
+        self.gradient_speed = kwargs.pop("gradient_speed", 500)
 
     def update(self, actions: dict[str, Any], deltatime: float) -> None:
         self.updated = False
@@ -89,7 +90,7 @@ class MainMenu(State):
                 self.updated = True
 
         if self.gradient_enabled and self.gradient is not None:
-            self.gradient_offset += 200 * deltatime
+            self.gradient_offset += self.gradient_speed * deltatime
             self.app._window.blit(self.gradient, (self.gradient_offset, 0))
 
             self.app._window.blit(
@@ -112,7 +113,7 @@ class MainMenu(State):
 
         if self.should_draw:
             self.gradient, self.gradient_width = utils.create_gradient(
-                self.gradient_colors, screen_width, screen_height
+                self.gradient_colors, screen_width, screen_height, 1.5
             )
             self.should_draw = False
 
