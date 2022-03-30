@@ -47,6 +47,14 @@ class SeatingPlanGenerator:
         self.save_layouts()
 
     def rename_layout(self, layout_name: str, new_layout_name: str) -> None:
+        if layout_name not in self.layouts:
+            print(f"No layout with name {layout_name} found to rename")
+            return
+
+        if new_layout_name in self.layouts:
+            print(f"A layout with the name {new_layout_name} already exists")
+            return
+
         self.layouts[new_layout_name] = self.layouts[layout_name]
         del self.layouts[layout_name]
 
@@ -97,10 +105,6 @@ def main():
     seating_plan_generator = SeatingPlanGenerator(
         "C:/Users/danie/OneDrive/Dokumenter/class-utils/assets"
     )
-
-    seating_plan_generator.rename_layout("1stn Klasserom", "Rom 205")
-
-    print(seating_plan_generator)
 
 
 if __name__ == "__main__":
