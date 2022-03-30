@@ -1,5 +1,5 @@
 import sys
-from typing import Protocol
+from typing import Any, Protocol
 
 import pygame
 from pygame import Rect, Surface
@@ -8,10 +8,13 @@ from states import MainMenu
 
 
 class State(Protocol):
-    def update(self, events: list[Event], deltatime: float) -> None:
+    def update(self, actions: dict[str, Any], deltatime: float) -> None:
         raise NotImplementedError()
 
     def draw(self, window: Surface) -> list[Rect | None]:
+        raise NotImplementedError()
+
+    def force_draw(self) -> None:
         raise NotImplementedError()
 
     def enter(self) -> None:
@@ -29,8 +32,20 @@ class App:
         pygame.init()
         pygame.font.init()
 
-        self._window = pygame.display.set_mode((screen_width, screen_height))
+        self._window = pygame.display.set_mode(
+            (screen_width, screen_height), pygame.RESIZABLE
+        )
         pygame.display.set_caption(title)
+
+        self.actions = {
+            "MouseDown": False,
+            "MouseUp": False,
+            "MouseMotion": False,
+            "Resized": False,
+            "ShiftHeld": False,
+            "MousePosition": (0, 0),
+            "KeysPressed": [],
+        }
 
         self._state_stack: list[State] = []
         main_menu = MainMenu(self)
@@ -49,6 +64,28 @@ class App:
         pygame.quit()
         sys.exit()
 
+    def resize(self, new_width: int, new_height: int) -> None:
+        self._screen_width = new_width
+        self._screen_height = new_height
+
+        self._window = pygame.display.set_mode(
+            (new_width, new_height), pygame.RESIZABLE
+        )
+
+        for state in self._state_stack:
+            state.force_draw()
+
+    def reset_actions(self) -> None:
+        self.actions = {
+            "MouseDown": False,
+            "MouseUp": False,
+            "MouseMotion": False,
+            "Resized": False,
+            "ShiftHeld": self.actions["ShiftHeld"],
+            "MousePosition": (0, 0),
+            "KeysPressed": [],
+        }
+
     def run(self) -> None:
         while True:
             if not self._state_stack:
@@ -56,11 +93,34 @@ class App:
 
             current_state = self._state_stack[-1]
 
-            events = pygame.event.get()
+            for event in pygame.event.get():
+                match event.type:
+                    case pygame.QUIT:
+                        self.quit()
+                    case pygame.VIDEORESIZE:
+                        self.resize(event.w, event.h)
+                        self.actions["Resized"] = True
+                    case pygame.KEYDOWN if event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
+                        self.actions["ShiftHeld"] = True
+                    case pygame.KEYUP if event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
+                        self.actions["ShiftHeld"] = False
+                    case pygame.KEYDOWN:
+                        self.actions["KeysPressed"].append(event.key)
+                    case pygame.MOUSEBUTTONDOWN if event.button == 1:
+                        self.actions["MouseDown"] = True
+                    case pygame.MOUSEBUTTONUP if event.button == 1:
+                        self.actions["MouseUp"] = True
+                    case pygame.MOUSEMOTION:
+                        self.actions["MouseMotion"] = True
+
+            self.actions["MousePosition"] = pygame.mouse.get_pos()
+
             deltatime = self._clock.tick(self._fps) / 1000
-            current_state.update(events, deltatime)
+            current_state.update(self.actions, deltatime)
+
+            self.reset_actions()
 
             update_area = current_state.draw(
                 self._window, self._screen_width, self._screen_height
             )
-            pygame.display.update(update_area)
+            pygame.display.update()
