@@ -9,15 +9,15 @@ class GroupMaker:
         self.assets_directory = assets_directory
         self.full_class_list = load_class_list(self.assets_directory)
         self.class_list = self.full_class_list
-        self.class_length = len(self.class_list)
 
     def groups_from_students_per_group(
-        self, antall: int, missing_students: set[str], minste_antall_per_gruppe=False
+        self, antall: int, missing_students: set[str], minste_antall_per_gruppe=True
     ):
 
         self.class_list = self.remove_students(missing_students)
+        class_length = len(self.class_list)
         random.shuffle(self.class_list)
-        amount_of_groups = self.class_length / antall
+        amount_of_groups = class_length / antall
 
         if minste_antall_per_gruppe:
             amount_of_groups = math.floor(amount_of_groups)
