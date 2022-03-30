@@ -15,8 +15,8 @@ def main() -> None:
 
     print(seating_plan_generator.generate("1stn", "Rom 205"))
 
-    # groups = GroupMaker(os.path.join(ASSETS_DIRECTORY, "klasseliste.txt"))
-    # print(groups.groups_from_amounts_of_groups(10))
+    groups = GroupMaker(os.path.join(ASSETS_DIRECTORY, "klasseliste.txt"))
+    print(groups.groups_from_amounts_of_groups(10, set()))
 
     # app = App(800, 600, "Klasseverktøy")
     # app.run()
