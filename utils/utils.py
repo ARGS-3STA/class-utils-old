@@ -43,9 +43,12 @@ def gradientRect(
 
 
 def create_gradient(
-    colors: list[tuple[int, int, int]], window_width: int, window_height: int
+    colors: list[tuple[int, int, int]],
+    window_width: int,
+    window_height: int,
+    gradient_smoothness: int,
 ) -> tuple[Surface, int]:
-    width, height = window_width // 2, window_height
+    width, height = window_width // gradient_smoothness, window_height
     gradient = pygame.Surface((width * (len(colors) - 1), height))
     for i in range(len(colors) - 1):
         gradient.blit(
