@@ -1,2 +1,2 @@
 from .groupmaker import GroupMaker
-from .matchmaking import Matchmaking
+from .seating_plan_generator import SeatingPlanGenerator

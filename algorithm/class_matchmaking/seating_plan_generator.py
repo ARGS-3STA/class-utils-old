@@ -3,7 +3,7 @@ import os
 import pickle
 import random
 
-from layout import Layout
+from .layout import Layout
 
 
 class SeatingPlanGenerator:
@@ -15,6 +15,11 @@ class SeatingPlanGenerator:
 
         self.layouts_file_path = os.path.join(assets_directory, "layouts.pkl")
         self.layouts: dict[str, Layout] = self.load_layouts()
+
+        self.seating_plans_file_path = os.path.join(
+            assets_directory, "seating-plans.pkl"
+        )
+        self.seating_plans: dict[str, Layout] = self.load_seating_plans()
 
     def load_class_lists(self) -> None:
         try:
@@ -65,14 +70,41 @@ class SeatingPlanGenerator:
             del self.layouts[layout_name]
             self.save_layouts()
 
+    def load_seating_plans(self) -> None:
+        try:
+            with open(self.seating_plans_file_path, "rb") as seating_plans_file:
+                return pickle.load(seating_plans_file)
+        except FileNotFoundError:
+            return {}
+
+    def save_seating_plans(self) -> None:
+        with open(self.seating_plans_file_path, "wb") as seating_plans_file:
+            pickle.dump(self.seating_plans, seating_plans_file)
+
+    def add_seating_plan(self, seating_plan: Layout, seating_plan_name: str) -> None:
+        self.seating_plans[seating_plan_name] = seating_plan
+        self.save_seating_plans()
+
     def __str__(self):
         return f"{self.class_lists}\n{self.layouts}"
 
     def get_class_list_names(self) -> list[str]:
         return self.class_lists.keys()
 
+    def get_class_list(self, class_list_name: str) -> list[str] | None:
+        return self.class_lists.get(class_list_name, None)
+
     def get_layout_names(self) -> list[str]:
         return self.layouts.keys()
+
+    def get_layout(self, layout_name: str) -> Layout | None:
+        return self.layouts.get(layout_name, None)
+
+    def get_seating_plan_names(self) -> list[str]:
+        return self.seating_plans.keys()
+
+    def get_seating_plan(self, seating_plan_name: str) -> Layout | None:
+        return self.seating_plans.get(seating_plan_name, None)
 
     def generate(self, class_list_name: str, layout_name: str) -> Layout | None:
         if class_list_name not in self.class_lists:
