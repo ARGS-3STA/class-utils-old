@@ -21,12 +21,8 @@ class App(Protocol):
 class State:
     def __init__(self, app: App):
         self.app = app
-<<<<<<< HEAD
-        self.should_update = True
-=======
         self.should_draw = True
         self.previous_screen_size = None
->>>>>>> a2dd4f4d17feec5da9b4e771156f9b9d81b1e1b4
 
     def update(self, actions: dict[Any], deltatime: float) -> None:
         raise NotImplementedError()

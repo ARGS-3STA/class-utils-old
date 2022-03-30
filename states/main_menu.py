@@ -109,12 +109,6 @@ class MainMenu(State):
     def draw(
         self, window: Surface, screen_width: int, screen_height: int
     ) -> list[Rect | None]:
-<<<<<<< HEAD
-        if not self.updated and not self.should_update:
-            return [None]
-        
-        self.should_update = False
-=======
 
         if self.should_draw:
             self.gradient, self.gradient_width = utils.create_gradient(
@@ -137,7 +131,6 @@ class MainMenu(State):
             self.quit_button.set_font(font)
 
             self.previous_screen_size = current_screen_size
->>>>>>> a2dd4f4d17feec5da9b4e771156f9b9d81b1e1b4
 
         return [
             self.class_list_button.draw(window, screen_width, screen_height),

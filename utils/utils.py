@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 import pygame
 from pygame import Rect, Surface
->>>>>>> a2dd4f4d17feec5da9b4e771156f9b9d81b1e1b4
 from pygame.font import Font, SysFont
 
 
@@ -26,24 +23,6 @@ def get_dynamic_font(
     return font
 
 
-<<<<<<< HEAD
-def get_optimal_font(
-    *strings: list[str],
-    max_width: int,
-    max_height: int,
-    font_type: str,
-    max_font_size: int
-) -> Font:
-    fonts = (
-        get_dynamic_font(max_width, max_height, string, font_type, max_font_size)
-        for string in strings
-    )
-    return lowest_font_size(*fonts)
-
-
-def lowest_font_size(*fonts: Font) -> Font:
-    return min(fonts, key=lambda font: font.get_height())
-=======
 def lowest_font(text_data: list[tuple[int, int, str, str, int]]) -> Font:
     fonts = (get_dynamic_font(*data) for data in text_data)
     return min(fonts, key=lambda font: font.get_height())
@@ -111,4 +90,3 @@ def amount_of_valid_seats(layout: Layout) -> int:
                 valid_seats += 1
 
     return valid_seats
->>>>>>> a2dd4f4d17feec5da9b4e771156f9b9d81b1e1b4
