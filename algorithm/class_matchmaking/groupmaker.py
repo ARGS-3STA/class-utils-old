@@ -31,7 +31,7 @@ class GroupMaker:
 
         return groups
 
-    def groups_from_amounts_of_groups(self, missing_students: set[str], antall: int):
+    def groups_from_amounts_of_groups(self, antall: int, missing_students: set[str]):
         self.class_list = self.remove_students(missing_students)
         random.shuffle(self.class_list)
 
