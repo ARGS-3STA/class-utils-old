@@ -54,6 +54,12 @@ class ClassMapMaker:
     def __str__(self):
         return f"{self.class_lists}\n{self.layouts}"
 
+    def get_class_list_names(self) -> list[str]:
+        return self.class_lists.keys()
+
+    def get_layout_names(self) -> list[str]:
+        return self.layouts.keys()
+
 
 def main():
     class_map_maker = ClassMapMaker(
