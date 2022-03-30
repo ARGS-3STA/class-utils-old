@@ -1,26 +1,27 @@
+import copy
 import os
 import pickle
+import random
 
 from layout import Layout
 
 
-class ClassMapMaker:
+class SeatingPlanGenerator:
     def __init__(self, assets_directory: str):
         self.assets_directory = assets_directory
 
         self.class_lists_file_path = os.path.join(assets_directory, "class-lists.pkl")
-        self.load_class_lists()
+        self.class_lists: dict[str, list[str]] = self.load_class_lists()
 
         self.layouts_file_path = os.path.join(assets_directory, "layouts.pkl")
-        self.load_layouts()
+        self.layouts: dict[str, Layout] = self.load_layouts()
 
     def load_class_lists(self) -> None:
         try:
             with open(self.class_lists_file_path, "rb") as class_lists_file:
-                self.class_lists = pickle.load(class_lists_file)
+                return pickle.load(class_lists_file)
         except FileNotFoundError:
-            self.class_lists = {}
-            self.save_class_lists()
+            return {}
 
     def save_class_lists(self) -> None:
         with open(self.class_lists_file_path, "wb") as class_lists_file:
@@ -33,10 +34,9 @@ class ClassMapMaker:
     def load_layouts(self) -> None:
         try:
             with open(self.layouts_file_path, "rb") as layouts_file:
-                self.layouts = pickle.load(layouts_file)
+                return pickle.load(layouts_file)
         except FileNotFoundError:
-            self.layouts = {}
-            self.save_layouts()
+            return {}
 
     def save_layouts(self) -> None:
         with open(self.layouts_file_path, "wb") as layouts_file:
@@ -44,6 +44,12 @@ class ClassMapMaker:
 
     def add_layout(self, layout: Layout, layout_name: str) -> None:
         self.layouts[layout_name] = layout
+        self.save_layouts()
+
+    def rename_layout(self, layout_name: str, new_layout_name: str) -> None:
+        self.layouts[new_layout_name] = self.layouts[layout_name]
+        del self.layouts[layout_name]
+
         self.save_layouts()
 
     def remove_layout(self, layout_name: str) -> None:
@@ -60,11 +66,41 @@ class ClassMapMaker:
     def get_layout_names(self) -> list[str]:
         return self.layouts.keys()
 
+    def generate(self, class_list_name: str, layout_name: str) -> Layout | None:
+        if class_list_name not in self.class_lists:
+            print("Invalid class-list name")
+            return
+        elif layout_name not in self.layouts:
+            print("Invalid layout name")
+            return
+
+        class_list = copy.deepcopy(self.class_lists[class_list_name])
+        random.shuffle(class_list)
+
+        class_size = len(class_list)
+
+        layout = copy.deepcopy(self.layouts[layout_name])
+
+        while class_list:
+            if not layout.table_positions:
+                print("Not enough seats for class of size:", class_size)
+                return
+
+            table_y, table_x = layout.table_positions.pop()
+            table = layout.grid[table_y][table_x]
+            table.set_student(class_list.pop())
+
+        return layout
+
 
 def main():
-    class_map_maker = ClassMapMaker(
+    seating_plan_generator = SeatingPlanGenerator(
         "C:/Users/danie/OneDrive/Dokumenter/class-utils/assets"
     )
+
+    seating_plan_generator.rename_layout("1stn Klasserom", "Rom 205")
+
+    print(seating_plan_generator)
 
 
 if __name__ == "__main__":
