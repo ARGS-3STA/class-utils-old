@@ -66,8 +66,10 @@ class MainMenu(State):
     def draw(
         self, window: Surface, screen_width: int, screen_height: int
     ) -> list[Rect | None]:
-        if not self.updated:
+        if not self.updated and not self.should_update:
             return [None]
+        
+        self.should_update = False
 
         return [
             window.fill(self.colors[self.current_color]),
