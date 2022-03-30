@@ -20,7 +20,7 @@ class Groups(State):
             0.1 / 10,
             0.1 / 10 * 8,
             0.1,
-            text="Gå Tilbake",
+            text="Tilbake",
             coordinate_position="topright",
             button_color="#000000",
             text_color="white",
