@@ -33,6 +33,7 @@ class Button:
         self.button_border_radius = kwargs.pop("button_border_radius", 0.01)
         self.button_border_width = kwargs.pop("button_border_width", 0)
         self.button_border_color = kwargs.pop("button_border_color", "black")
+        self.is_transparent = kwargs.pop("is_transparent", False)
 
         self.current_button_color = self.button_color
 
@@ -62,15 +63,16 @@ class Button:
             case "bottomleft":
                 self.button_rect = button_surf.get_rect(bottomleft=(x, y))
 
-        update_area = pygame.draw.rect(
-            window,
-            self.current_button_color,
-            self.button_rect,
-            border_radius=int(screen_width * self.button_border_radius),
-        )
+        if not self.is_transparent:
+            update_area = pygame.draw.rect(
+                window,
+                self.current_button_color,
+                self.button_rect,
+                border_radius=int(screen_width * self.button_border_radius),
+            )
 
         if self.button_border_width > 0:
-            pygame.draw.rect(window, self.button_border_color, self.button_rect, self.button_border_width, border_radius=int(screen_width * self.button_border_radius))
+            update_area = pygame.draw.rect(window, self.button_border_color, self.button_rect, self.button_border_width, border_radius=int(screen_width * self.button_border_radius))
 
         if self.text:
             if self.font is None:
@@ -87,7 +89,7 @@ class Button:
             text_surf = font.render(self.text, True, self.text_color)
             text_rect = text_surf.get_rect(center=self.button_rect.center)
 
-            window.blit(text_surf, text_rect)
+            update_area = window.blit(text_surf, text_rect)
 
         return update_area
 
