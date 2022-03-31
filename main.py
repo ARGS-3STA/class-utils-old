@@ -13,10 +13,10 @@ def main() -> None:
     if not os.path.isdir(ASSETS_DIRECTORY):
         os.mkdir(ASSETS_DIRECTORY)
 
-    seating_plan_generator = SeatingPlanGenerator(ASSETS_DIRECTORY)
+    # seating_plan_generator = SeatingPlanGenerator(ASSETS_DIRECTORY)
 
-    print(seating_plan_generator.generate("1stn", "Rom 205"))
-    print(seating_plan_generator.generate("1stn", "Rom 205"))
+    # print(seating_plan_generator.generate("1stn", "Rom 205"))
+    # print(seating_plan_generator.generate("1stn", "Rom 205"))
 
     # groups = GroupMaker(os.path.join(ASSETS_DIRECTORY, "klasseliste.txt"))
     # print(groups.groups_from_students_per_group(3, {"Viktor", "Stine"}, True))
