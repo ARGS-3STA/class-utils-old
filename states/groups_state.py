@@ -38,7 +38,8 @@ class Groups(State):
             button_border_width=5,
         )
 
-        self.check_box = CheckBox(0.5, 0.5, 0.1, 0.1)
+        self.grupper_check_box = CheckBox(1/8, 2.5/5, 2/25, 2/25, coordinate_position="topright", x_offset=-10, state=True)
+        self.students_check_box = CheckBox(1/8, 2.5/5, 2/25, 2/25, coordinate_position="topleft", x_offset=10)
 
     def update(self, actions, deltatime):
         self.updated = False
@@ -50,13 +51,16 @@ class Groups(State):
                 self.updated = True
             if self.generate_groups_button.check_hover(mouse_pos):
                 self.updated = True
-            if self.check_box.check_hover(mouse_pos):
+            if self.grupper_check_box.check_hover(mouse_pos):
+                self.updated = True
+            if self.students_check_box.check_hover(mouse_pos):
                 self.updated = True
         if actions["MouseDown"]:
             if self.back_button.is_pressed(mouse_pos):
                 self.exit()
-            if self.check_box.is_pressed(mouse_pos):
-                self.check_box.toggle_state()
+            if self.grupper_check_box.is_pressed(mouse_pos) or self.students_check_box.is_pressed(mouse_pos):
+                self.grupper_check_box.toggle_state()
+                self.students_check_box.toggle_state()
                 self.updated = True
 
     def draw(self, window, screen_width, screen_height):
@@ -69,5 +73,6 @@ class Groups(State):
             window.fill((255, 255, 255)),
             self.back_button.draw(window, screen_width, screen_height),
             self.generate_groups_button.draw(window, screen_width, screen_height),
-            self.check_box.draw(window, screen_width, screen_height),
+            self.grupper_check_box.draw(window, screen_width, screen_height),
+            self.students_check_box.draw(window, screen_width, screen_height),
         ]
