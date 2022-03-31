@@ -11,7 +11,7 @@ def main() -> None:
     if not os.path.isdir(ASSETS_DIRECTORY):
         os.mkdir(ASSETS_DIRECTORY)
 
-    data_loader = DataLoader(ASSETS_DIRECTORY)
+    # data_loader = DataLoader(ASSETS_DIRECTORY)
 
     # seating_plan_generator = SeatingPlanGenerator(data_loader)
 
