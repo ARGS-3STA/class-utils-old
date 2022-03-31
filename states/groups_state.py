@@ -38,8 +38,12 @@ class Groups(State):
             button_border_width=5,
         )
 
-        self.grupper_check_box = CheckBox(1/8, 2.5/5, 2/25, 2/25, coordinate_position="topright", x_offset=-10, state=True)
-        self.students_check_box = CheckBox(1/8, 2.5/5, 2/25, 2/25, coordinate_position="topleft", x_offset=10)
+        self.grupper_check_box = CheckBox(
+            1 / 8, 2.5 / 5, 2 / 25, 2 / 25, coordinate_position="topright", x_offset=-10
+        )
+        self.students_check_box = CheckBox(
+            1 / 8, 2.5 / 5, 2 / 25, 2 / 25, coordinate_position="topleft", x_offset=10
+        )
 
     def update(self, actions, deltatime):
         self.updated = False
@@ -58,9 +62,13 @@ class Groups(State):
         if actions["MouseDown"]:
             if self.back_button.is_pressed(mouse_pos):
                 self.exit()
-            if self.grupper_check_box.is_pressed(mouse_pos) or self.students_check_box.is_pressed(mouse_pos):
-                self.grupper_check_box.toggle_state()
-                self.students_check_box.toggle_state()
+            if self.grupper_check_box.is_pressed(mouse_pos):
+                self.grupper_check_box.set_state(True)
+                self.students_check_box.set_state(False)
+                self.updated = True
+            elif self.students_check_box.is_pressed(mouse_pos):
+                self.students_check_box.set_state(True)
+                self.grupper_check_box.set_state(False)
                 self.updated = True
 
     def draw(self, window, screen_width, screen_height):

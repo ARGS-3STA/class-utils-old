@@ -21,8 +21,8 @@ def main() -> None:
     # groups = GroupMaker(data_loader)
     # print(groups.groups_from_students_per_group("1stn", 3, {"Viktor", "Stine"}, True))
 
-    # app = App(800, 600, "Klasseverktøy")
-    # app.run()
+    app = App(800, 600, "Klasseverktøy")
+    app.run()
 
 
 if __name__ == "__main__":

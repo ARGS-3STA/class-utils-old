@@ -1,17 +1,18 @@
 import pygame
 
+
 class CheckBox:
     def __init__(self, x, y, width, height, **kwargs):
-        self.x, self.y = x,y
-        self.width, self.height = width,height
+        self.x, self.y = x, y
+        self.width, self.height = width, height
 
         self.box_rect = None
         self.is_hovered = False
 
         self.state = kwargs.pop("state", False)
-        self.on_color = kwargs.pop("on_color", (100,100,100))
-        self.off_color = kwargs.pop("off_color", (255,0,0))
-        self.hover_color = kwargs.pop("hover_color", (0,0,0))
+        self.on_color = kwargs.pop("on_color", (100, 100, 100))
+        self.off_color = kwargs.pop("off_color", (255, 0, 0))
+        self.hover_color = kwargs.pop("hover_color", (0, 0, 0))
         self.coordinate_position = kwargs.pop("coordinate_position", "center")
         self.x_offset = kwargs.pop("x_offset", 0)
         self.color = None
@@ -29,9 +30,9 @@ class CheckBox:
             return False
 
         return self.box_rect.collidepoint(mouse_pos)
-    
-    def toggle_state(self):
-        self.state = not self.state
+
+    def set_state(self, state: bool):
+        self.state = state
         self.set_color()
         self.current_color = self.color
 
@@ -52,10 +53,10 @@ class CheckBox:
             self.current_color = self.color
 
         return True
-    
+
     def draw(self, window, screen_width, screen_height):
-        x,y = self.x * screen_width + self.x_offset, self.y*screen_height
-        width, height = self.width*screen_width, self.height*screen_height
+        x, y = self.x * screen_width + self.x_offset, self.y * screen_height
+        width, height = self.width * screen_width, self.height * screen_height
 
         surface = pygame.Surface((width, height))
 
@@ -74,5 +75,5 @@ class CheckBox:
         surface_rect = surface.get_rect(center=self.box_rect.center)
 
         surface.fill(self.current_color)
-        
+
         return window.blit(surface, surface_rect)
