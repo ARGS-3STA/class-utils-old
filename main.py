@@ -17,8 +17,8 @@ def main() -> None:
     # groups = GroupMaker(os.path.join(ASSETS_DIRECTORY, "klasseliste.txt"))
     # print(groups.groups_from_students_per_group(3, {"Viktor", "Stine"}, True))
 
-    # app = App(800, 600, "Klasseverktøy")
-    # app.run()
+    app = App(800, 600, "Klasseverktøy")
+    app.run()
 
 
 if __name__ == "__main__":
