@@ -1,23 +1,20 @@
 import os
 import pickle
-from dataclasses import dataclass
 
-from .class_matchmaking import Layout
+from .layout import Layout
 
-
-def load_class_list(file_path: str):
-    try:
-        with open(file_path, encoding="latin-1") as class_list:
-            return class_list.read().splitlines()
-    except FileNotFoundError:
-        print("Can't find file with path:", file_path)
+# def load_class_list(file_path: str):
+#     try:
+#         with open(file_path, encoding="latin-1") as class_list:
+#             return class_list.read().splitlines()
+#     except FileNotFoundError:
+#         print("Can't find file with path:", file_path)
 
 
-@dataclass(slots=True)
 class DataLoader:
-    assets_directory: str
+    def __init__(self, assets_directory: str):
+        self.assets_directory = assets_directory
 
-    def __post_init__(self):
         self.class_lists_file_path = os.path.join(
             self.assets_directory, "class-lists.pkl"
         )
@@ -48,10 +45,17 @@ class DataLoader:
 
     def remove_class_list(self, class_list_name: str) -> None:
         del self.class_lists[class_list_name]
+        self.save_class_lists()
 
     def rename_class_list(self, class_list_name: str, new_class_list_name: str) -> None:
         self.class_lists[new_class_list_name] = self.class_lists[class_list_name]
         self.remove_class_list(class_list_name)
+
+    def get_class_list_names(self):
+        return self.class_lists.keys()
+
+    def get_class_list(self, class_list_name: str) -> list[str]:
+        return self.class_lists[class_list_name]
 
     def load_layouts(self) -> dict[str, Layout]:
         try:
@@ -70,10 +74,17 @@ class DataLoader:
 
     def remove_layout(self, layout_name: str) -> None:
         del self.layouts[layout_name]
+        self.save_layouts()
 
     def rename_layout(self, layout_name: str, new_layout_name: str) -> None:
         self.layouts[new_layout_name] = self.layouts[layout_name]
         self.remove_layout(layout_name)
+
+    def get_layout_names(self):
+        return self.layouts.keys()
+
+    def get_layout(self, layout_name: str) -> Layout:
+        return self.layouts[layout_name]
 
     def load_seating_plans(self) -> dict[str, Layout]:
         try:
@@ -87,11 +98,12 @@ class DataLoader:
             pickle.dump(self.seating_plans, seating_plans_file)
 
     def add_seating_plan(self, seating_plan: Layout, seating_plan_name: str) -> None:
-        self.layouts[seating_plan_name] = seating_plan
+        self.seating_plans[seating_plan_name] = seating_plan
         self.save_seating_plans()
 
     def remove_seating_plan(self, seating_plan_name: str) -> None:
         del self.seating_plans[seating_plan_name]
+        self.save_seating_plans()
 
     def rename_seating_plan(
         self, seating_plan_name: str, new_seating_plan_name: str
@@ -100,3 +112,9 @@ class DataLoader:
             seating_plan_name
         ]
         self.remove_seating_plan(seating_plan_name)
+
+    def get_seating_plan_names(self):
+        return self.seating_plans.keys()
+
+    def get_seating_plan(self, seating_plan_name: str) -> Layout:
+        return self.seating_plans[seating_plan_name]
