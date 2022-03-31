@@ -36,6 +36,10 @@ class SeatingPlanGenerator:
         self.class_lists[class_list_name] = class_list
         self.save_class_lists()
 
+    def remove_class_list(self, class_list_name: str) -> None:
+        del self.class_lists[class_list_name]
+        self.save_class_lists()
+
     def load_layouts(self) -> None:
         try:
             with open(self.layouts_file_path, "rb") as layouts_file:

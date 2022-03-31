@@ -91,16 +91,6 @@ class MainMenu(State):
 
         if self.gradient_enabled and self.gradient is not None:
             self.gradient_offset += self.gradient_speed * deltatime
-            self.app._window.blit(self.gradient, (self.gradient_offset, 0))
-
-            self.app._window.blit(
-                self.gradient,
-                (
-                    -(self.gradient_width * (len(self.gradient_colors) - 1))
-                    + self.gradient_offset,
-                    0,
-                ),
-            )
 
             if self.gradient_offset > (
                 self.gradient_width * (len(self.gradient_colors) - 1)
@@ -132,8 +122,22 @@ class MainMenu(State):
             self.quit_button.set_font(font)
 
             self.previous_screen_size = current_screen_size
+        
+        gradient_drawing_area = None
+        if self.gradient_enabled and self.gradient is not None:
+            window.blit(self.gradient, (self.gradient_offset, 0))
+
+            window.blit(
+                self.gradient,
+                (
+                    -(self.gradient_width * (len(self.gradient_colors) - 1))
+                    + self.gradient_offset,
+                    0,
+                ),
+            )
 
         return [
+            gradient_drawing_area,
             self.class_list_button.draw(window, screen_width, screen_height),
             self.groups_button.draw(window, screen_width, screen_height),
             self.quit_button.draw(window, screen_width, screen_height),
