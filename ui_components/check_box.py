@@ -13,8 +13,16 @@ class CheckBox:
         self.off_color = kwargs.pop("off_color", (255,0,0))
         self.hover_color = kwargs.pop("hover_color", (0,0,0))
         self.coordinate_position = kwargs.pop("coordinate_position", "center")
-        self.current_color = self.off_color
-        self.color = self.off_color
+        self.x_offset = kwargs.pop("x_offset", 0)
+        self.color = None
+        self.set_color()
+        self.current_color = self.color
+
+    def set_color(self):
+        if self.state:
+            self.color = self.on_color
+        else:
+            self.color = self.off_color
 
     def is_pressed(self, mouse_pos):
         if self.box_rect is None:
@@ -24,10 +32,7 @@ class CheckBox:
     
     def toggle_state(self):
         self.state = not self.state
-        if self.state:
-            self.color = self.on_color
-        else:
-            self.color = self.off_color
+        self.set_color()
         self.current_color = self.color
 
     def check_hover(self, mouse_pos) -> bool:
@@ -49,7 +54,7 @@ class CheckBox:
         return True
     
     def draw(self, window, screen_width, screen_height):
-        x,y = self.x * screen_width, self.y*screen_height
+        x,y = self.x * screen_width + self.x_offset, self.y*screen_height
         width, height = self.width*screen_width, self.height*screen_height
 
         surface = pygame.Surface((width, height))
