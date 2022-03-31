@@ -15,15 +15,14 @@ class CheckBox:
         self.hover_color = kwargs.pop("hover_color", (0, 0, 0))
         self.coordinate_position = kwargs.pop("coordinate_position", "center")
         self.x_offset = kwargs.pop("x_offset", 0)
-        self.color = None
+        self.current_color = None
         self.set_color()
-        self.current_color = self.color
 
     def set_color(self):
         if self.state:
-            self.color = self.on_color
+            self.current_color = self.on_color
         else:
-            self.color = self.off_color
+            self.current_color = self.off_color
 
     def is_pressed(self, mouse_pos):
         if self.box_rect is None:
@@ -34,7 +33,6 @@ class CheckBox:
     def set_state(self, state: bool):
         self.state = state
         self.set_color()
-        self.current_color = self.color
 
     def check_hover(self, mouse_pos) -> bool:
         if self.box_rect is None:
@@ -50,7 +48,7 @@ class CheckBox:
         if self.is_hovered:
             self.current_color = self.hover_color
         else:
-            self.current_color = self.color
+            self.current_color = self.current_color
 
         return True
 
