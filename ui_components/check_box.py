@@ -18,6 +18,9 @@ class CheckBox:
         self.coordinate_position = kwargs.pop("coordinate_position", "center")
         self.x_offset = kwargs.pop("x_offset", 0)
 
+        self.border_width = kwargs.pop("border_width", 0)
+        self.border_color = kwargs.pop("border_color", "black")
+
         self.current_color = None
         self.set_color()
 
@@ -51,7 +54,7 @@ class CheckBox:
         if self.is_hovered:
             self.current_color = self.hover_color
         else:
-            self.current_color = self.current_color
+            self.set_color()
 
         return True
 
@@ -59,7 +62,9 @@ class CheckBox:
         x, y = self.x * screen_width + self.x_offset, self.y * screen_height
         width, height = self.width * screen_width, self.height * screen_height
 
-        surface = pygame.Surface((width, height))
+        size = min(width, height)
+
+        surface = pygame.Surface((size, size))
 
         match self.coordinate_position:
             case "center":
@@ -76,5 +81,10 @@ class CheckBox:
         surface_rect = surface.get_rect(center=self.box_rect.center)
 
         surface.fill(self.current_color)
+
+        if self.border_width:
+            pygame.draw.rect(
+                surface, self.border_color, (0, 0, size, size), self.border_width
+            )
 
         return window.blit(surface, surface_rect)

@@ -39,10 +39,28 @@ class Groups(State):
         )
 
         self.grupper_check_box = CheckBox(
-            1 / 8, 2.5 / 5, 2 / 25, 2 / 25, coordinate_position="topright", x_offset=-10
+            1 / 8,
+            2.5 / 5,
+            2 / 25,
+            2 / 25,
+            coordinate_position="topright",
+            x_offset=-10,
+            on_color="grey",
+            off_color="white",
+            border_width=3,
+            hover_color=(220, 220, 220),
         )
         self.students_check_box = CheckBox(
-            1 / 8, 2.5 / 5, 2 / 25, 2 / 25, coordinate_position="topleft", x_offset=10
+            1 / 8,
+            2.5 / 5,
+            2 / 25,
+            2 / 25,
+            coordinate_position="topleft",
+            x_offset=10,
+            on_color="grey",
+            off_color="white",
+            border_width=3,
+            hover_color=(220, 220, 220),
         )
 
     def update(self, actions, deltatime):
