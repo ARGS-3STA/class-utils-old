@@ -3,7 +3,7 @@ from typing import Any
 import pygame
 import utils
 from pygame import Rect, Surface
-from ui_components import Button, CheckBox
+from ui_components import Button, CheckBox, NumberField
 
 from .state import App, State
 
@@ -63,6 +63,8 @@ class Groups(State):
             hover_color=(220, 220, 220),
         )
 
+        self.number_input_field = NumberField(0.5, 0.5, 1 / 8, 1 / 8)
+
     def update(self, actions, deltatime):
         self.updated = False
 
@@ -101,4 +103,5 @@ class Groups(State):
             self.generate_groups_button.draw(window, screen_width, screen_height),
             self.grupper_check_box.draw(window, screen_width, screen_height),
             self.students_check_box.draw(window, screen_width, screen_height),
+            self.number_input_field.draw(window, screen_width, screen_height),
         ]
