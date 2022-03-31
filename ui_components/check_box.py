@@ -11,10 +11,13 @@ class CheckBox:
 
         self.state = kwargs.pop("state", False)
         self.on_color = kwargs.pop("on_color", (100, 100, 100))
+
         self.off_color = kwargs.pop("off_color", (255, 0, 0))
         self.hover_color = kwargs.pop("hover_color", (0, 0, 0))
+
         self.coordinate_position = kwargs.pop("coordinate_position", "center")
         self.x_offset = kwargs.pop("x_offset", 0)
+
         self.current_color = None
         self.set_color()
 
