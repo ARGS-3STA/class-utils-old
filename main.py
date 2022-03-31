@@ -10,8 +10,12 @@ def main() -> None:
     BASE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
     ASSETS_DIRECTORY = os.path.join(BASE_DIRECTORY, "assets")
 
+    if not os.path.isdir(ASSETS_DIRECTORY):
+        os.mkdir(ASSETS_DIRECTORY)
+
     seating_plan_generator = SeatingPlanGenerator(ASSETS_DIRECTORY)
 
+    print(seating_plan_generator.generate("1stn", "Rom 205"))
     print(seating_plan_generator.generate("1stn", "Rom 205"))
 
     # groups = GroupMaker(os.path.join(ASSETS_DIRECTORY, "klasseliste.txt"))

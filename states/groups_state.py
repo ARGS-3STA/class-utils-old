@@ -31,7 +31,7 @@ class Groups(State):
             5 / 6,
             4 / 20,
             4 / 25,
-            text="LAG GRUPPER!",
+            text="Lag Grupper",
             coordinate_position="center",
             button_color="white",
             text_color="black",
