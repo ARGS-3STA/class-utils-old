@@ -31,6 +31,8 @@ class Button:
         self.button_color = kwargs.pop("button_color", "white")
         self.button_hover_color = kwargs.pop("button_hover_color", "grey")
         self.button_border_radius = kwargs.pop("button_border_radius", 0.01)
+        self.button_border_width = kwargs.pop("button_border_width", 0)
+        self.button_border_color = kwargs.pop("button_border_color", "black")
 
         self.current_button_color = self.button_color
 
@@ -67,11 +69,14 @@ class Button:
             border_radius=int(screen_width * self.button_border_radius),
         )
 
+        if self.button_border_width > 0:
+            pygame.draw.rect(window, self.button_border_color, self.button_rect, self.button_border_width, border_radius=int(screen_width * self.button_border_radius))
+
         if self.text:
             if self.font is None:
                 font = utils.get_dynamic_font(
-                    width * 0.9,
-                    height * 0.9,
+                    width * 0.9 - self.button_border_width * 2,
+                    height * 0.9 - self.button_border_width * 2,
                     self.text,
                     self.font_type,
                     self.max_font_size,

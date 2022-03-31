@@ -33,8 +33,9 @@ class Groups(State):
             4 / 25,
             text="LAG GRUPPER!",
             coordinate_position="center",
-            button_color="black",
-            text_color="white",
+            button_color="white",
+            text_color="black",
+            button_border_width=5,
         )
 
     def update(self, actions, deltatime):
