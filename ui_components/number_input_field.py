@@ -99,3 +99,13 @@ class NumberField:
         window.blit(text_surf, text_rect)
 
         return update_area
+    
+    def check_buttons(self, mouse_pos):
+        if self.increase_button.is_pressed(mouse_pos, x_offset = self.rect.x, y_offset = self.rect.y):
+            self.value += 1
+            return True
+        elif self.decrease_button.is_pressed(mouse_pos, x_offset = self.rect.x, y_offset = self.rect.y):
+            if self.value > 0:
+                self.value -= 1
+                return True
+        return False

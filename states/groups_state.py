@@ -90,6 +90,8 @@ class Groups(State):
                 self.students_check_box.set_state(True)
                 self.grupper_check_box.set_state(False)
                 self.updated = True
+            elif self.number_input_field.check_buttons(mouse_pos):
+                self.updated = True
 
     def draw(self, window, screen_width, screen_height):
         if not self.updated and not self.should_draw:
