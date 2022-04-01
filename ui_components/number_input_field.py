@@ -1,5 +1,6 @@
 import pygame
 import utils
+
 from .button import Button
 
 
@@ -18,30 +19,30 @@ class NumberField:
 
         self.coordinate_position = kwargs.pop("coordinate_position", "center")
         self.border_radius = kwargs.pop("border_radius", 0.01)
-        self.border_width = kwargs.pop("border_width", 5)
+        self.border_width = kwargs.pop("border_width", 3)
 
         self.increase_button = Button(
             0.8,
-            0.325,
+            0.32,
             0.2,
             0.3,
             text="^",
             coordinate_position="center",
             button_color="white",
             text_color="black",
-            button_border_width=5,
+            button_border_width=3,
         )
 
         self.decrease_button = Button(
             0.8,
-            0.625,
+            0.63,
             0.2,
             0.3,
             text="v",
             coordinate_position="center",
             button_color="white",
             text_color="black",
-            button_border_width=5,
+            button_border_width=3,
         )
 
         self.rect = None
