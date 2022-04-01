@@ -79,6 +79,8 @@ class Groups(State):
                 self.updated = True
             if self.students_check_box.check_hover(mouse_pos):
                 self.updated = True
+            if self.number_input_field.check_hover(mouse_pos):
+                self.updated = True
         if actions["MouseDown"]:
             if self.back_button.is_pressed(mouse_pos):
                 self.exit()
@@ -90,8 +92,10 @@ class Groups(State):
                 self.students_check_box.set_state(True)
                 self.grupper_check_box.set_state(False)
                 self.updated = True
-            elif self.number_input_field.check_buttons(mouse_pos):
+            if self.number_input_field.check_buttons(mouse_pos):
                 self.updated = True
+        if self.number_input_field.check_key_presses(actions["KeysPressed"]):
+            self.updated = True
 
     def draw(self, window, screen_width, screen_height):
         if not self.updated and not self.should_draw:

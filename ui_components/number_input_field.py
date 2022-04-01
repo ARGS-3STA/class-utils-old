@@ -12,8 +12,9 @@ class NumberField:
 
         self.value = kwargs.pop("value", 0)
         self.color = kwargs.pop("color", (0, 0, 0))
+        self.hover_color = kwargs.pop("hover_color", "grey")
 
-        self.font_type = kwargs.pop("font_type", "bahnschrif")
+        self.font_type = kwargs.pop("font_type", "bahnschrift")
         self.max_font_size = kwargs.pop("max_font_size", 60)
         self.text_color = kwargs.pop("text_color", (0, 0, 0))
 
@@ -46,6 +47,8 @@ class NumberField:
         )
 
         self.rect = None
+        self.is_selected = False
+        self.is_hovered = False
 
     def draw(self, window, screen_width, screen_height):
         x, y = self.x * screen_width, self.y * screen_height
@@ -66,9 +69,16 @@ class NumberField:
             case "bottomleft":
                 self.rect = surface.get_rect(bottomleft=(x, y))
 
+        if self.is_hovered:
+            pygame.draw.rect(
+                surface,
+                self.hover_color,
+                (0, 0, width, height),
+                border_radius=int(screen_width * self.border_radius),
+            )
+
         self.decrease_button.draw(surface, width, height)
         self.increase_button.draw(surface, width, height)
-
         update_area = window.blit(surface, self.rect)
 
         update_area = pygame.draw.rect(
@@ -100,13 +110,76 @@ class NumberField:
         window.blit(text_surf, text_rect)
 
         return update_area
-    
+
     def check_buttons(self, mouse_pos):
-        if self.increase_button.is_pressed(mouse_pos, x_offset = self.rect.x, y_offset = self.rect.y):
-            self.value += 1
-            return True
-        elif self.decrease_button.is_pressed(mouse_pos, x_offset = self.rect.x, y_offset = self.rect.y):
+        self.is_selected = False
+
+        if self.increase_button.is_pressed(
+            mouse_pos, x_offset=self.rect.x, y_offset=self.rect.y
+        ):
+            if self.value < 99:
+                self.value += 1
+                return True
+        elif self.decrease_button.is_pressed(
+            mouse_pos, x_offset=self.rect.x, y_offset=self.rect.y
+        ):
             if self.value > 0:
                 self.value -= 1
                 return True
+        elif self.rect.collidepoint(mouse_pos):
+            self.is_selected = True
+            self.is_hovered = not self.is_hovered
+            return True
+
         return False
+
+    def check_key_presses(self, keys):
+        if not self.is_selected:
+            return False
+
+        previous_value = self.value
+
+        str_value = str(self.value)
+
+        for key in keys:
+            match key:
+                case pygame.K_BACKSPACE:
+                    str_value = str_value[:-1]
+                case pygame.K_ESCAPE:
+                    str_value = ""
+                case _:
+                    key = pygame.key.name(key)
+                    if key.isdigit():
+                        str_value += key
+
+        self.value = min(int(str_value), 99) if str_value else 0
+
+        return self.value != previous_value
+
+    def check_hover(self, mouse_pos):
+        if self.rect is None:
+            return False
+
+        changed = False
+
+        if self.increase_button.check_hover(
+            mouse_pos, x_offset=self.rect.x, y_offset=self.rect.y
+        ):
+            changed = True
+        if self.decrease_button.check_hover(
+            mouse_pos, x_offset=self.rect.x, y_offset=self.rect.y
+        ):
+            changed = True
+
+        if (
+            changed
+            or self.increase_button.is_hovered
+            or self.decrease_button.is_hovered
+        ):
+            self.is_hovered = False
+            return True
+
+        was_hovered = self.is_hovered
+        self.is_hovered = self.rect.collidepoint(mouse_pos)
+
+        return self.is_hovered != was_hovered

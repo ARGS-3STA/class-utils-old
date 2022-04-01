@@ -72,7 +72,13 @@ class Button:
             )
 
         if self.button_border_width > 0:
-            update_area = pygame.draw.rect(window, self.button_border_color, self.button_rect, self.button_border_width, border_radius=int(screen_width * self.button_border_radius))
+            update_area = pygame.draw.rect(
+                window,
+                self.button_border_color,
+                self.button_rect,
+                self.button_border_width,
+                border_radius=int(screen_width * self.button_border_radius),
+            )
 
         if self.text:
             if self.font is None:
@@ -93,13 +99,15 @@ class Button:
 
         return update_area
 
-    def check_hover(self, mouse_pos) -> bool:
+    def check_hover(self, mouse_pos, *, x_offset=0, y_offset=0) -> bool:
         if self.button_rect is None:
             return False
 
         was_hovered = self.is_hovered
 
-        self.is_hovered = self.button_rect.collidepoint(mouse_pos)
+        self.is_hovered = self.button_rect.collidepoint(
+            mouse_pos[0] - x_offset, mouse_pos[1] - y_offset
+        )
 
         if self.is_hovered == was_hovered:
             return False
@@ -111,11 +119,13 @@ class Button:
 
         return True
 
-    def is_pressed(self, mouse_pos, *, x_offset = 0, y_offset = 0) -> bool:
+    def is_pressed(self, mouse_pos, *, x_offset=0, y_offset=0) -> bool:
         if self.button_rect is None:
             return False
 
-        return self.button_rect.collidepoint((mouse_pos[0]-x_offset, mouse_pos[1]-y_offset))
+        return self.button_rect.collidepoint(
+            (mouse_pos[0] - x_offset, mouse_pos[1] - y_offset)
+        )
 
     def set_font(self, font: Font) -> None:
         self.font = font
