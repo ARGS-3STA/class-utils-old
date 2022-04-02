@@ -33,6 +33,7 @@ class DataLoader:
             with open(self.class_lists_file_path, "rb") as class_lists_file:
                 return pickle.load(class_lists_file)
         except FileNotFoundError:
+            print(self.class_lists_file_path)
             return {}
 
     def save_class_lists(self) -> None:

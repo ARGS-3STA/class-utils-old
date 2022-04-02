@@ -1,9 +1,11 @@
 from typing import Any
 
 import pygame
-import utils
+from utils import *
 from pygame import Rect, Surface
 from ui_components import Button, CheckBox, NumberField, TextField
+from algorithm import GroupMaker
+from algorithm import DataLoader
 
 from .state import App, State
 
@@ -14,6 +16,8 @@ class Groups(State):
         self.updated = False
 
         self.background = None
+
+        self.group_maker = GroupMaker(app.data_loader)
 
         self.back_button = Button(
             1 - 0.1 / 10,
@@ -61,6 +65,7 @@ class Groups(State):
             off_color="white",
             border_width=3,
             hover_color=(220, 220, 220),
+            state=True,
         )
 
         self.number_input_field = NumberField(1 / 8, 4 / 6, 1 / 8, 1 / 8)
@@ -69,10 +74,14 @@ class Groups(State):
             1 / 8, 2 / 4 - 1 / 16, 0.2, 0.1, text="Grupperings metode"
         )
         self.student_text_field = TextField(
-            1 / 8 - 1 / 25, 2 / 4 - 1 / 30, 2 / 25, 0.05, text="Antall personer"
+            1 / 8 - 1 / 25,
+            2 / 4 - 1 / 30,
+            2 / 25,
+            0.05,
+            text="Antall grupper",
         )
         self.groups_text_field = TextField(
-            1 / 8 + 1 / 25, 2 / 4 - 1 / 30, 2 / 25, 0.05, text="Antall grupper"
+            1 / 8 + 1 / 25, 2 / 4 - 1 / 30, 2 / 25, 0.05, text="Antall personer"
         )
 
     def update(self, actions, deltatime):
@@ -102,6 +111,22 @@ class Groups(State):
                 self.students_check_box.set_state(True)
                 self.grupper_check_box.set_state(False)
                 self.updated = True
+
+            elif self.generate_groups_button.is_pressed(mouse_pos):
+
+                if self.students_check_box.state:
+                    print(
+                        self.group_maker.groups_from_students_per_group(
+                            "1stn", self.number_input_field.value, []
+                        )
+                    )
+                else:
+                    print(
+                        self.group_maker.groups_from_amounts_of_groups(
+                            "1stn", self.number_input_field.value, []
+                        )
+                    )
+
             if self.number_input_field.check_buttons(mouse_pos):
                 self.updated = True
         if self.number_input_field.check_key_presses(actions["KeysPressed"]):

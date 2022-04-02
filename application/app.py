@@ -25,9 +25,12 @@ class State(Protocol):
 
 
 class App:
-    def __init__(self, screen_width: int, screen_height: int, title: str, **kwargs):
+    def __init__(
+        self, screen_width: int, screen_height: int, title: str, data_loader, **kwargs
+    ):
         self._screen_width = screen_width
         self._screen_height = screen_height
+        self.data_loader = data_loader
 
         pygame.init()
         pygame.font.init()
