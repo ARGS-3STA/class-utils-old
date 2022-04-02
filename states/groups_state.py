@@ -113,7 +113,6 @@ class Groups(State):
                 self.updated = True
 
             elif self.generate_groups_button.is_pressed(mouse_pos):
-
                 if self.students_check_box.state:
                     print(
                         self.group_maker.groups_from_students_per_group(

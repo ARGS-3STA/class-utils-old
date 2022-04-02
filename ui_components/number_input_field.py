@@ -10,7 +10,7 @@ class NumberField:
         self.width, self.height = width, height
         self.font = None
 
-        self.value = kwargs.pop("value", 0)
+        self.value = kwargs.pop("value", 1)
         self.color = kwargs.pop("color", (0, 0, 0))
         self.hover_color = kwargs.pop("hover_color", "grey")
 
@@ -123,7 +123,7 @@ class NumberField:
         elif self.decrease_button.is_pressed(
             mouse_pos, x_offset=self.rect.x, y_offset=self.rect.y
         ):
-            if self.value > 0:
+            if self.value > 1:
                 self.value -= 1
                 return True
         elif self.rect.collidepoint(mouse_pos):
