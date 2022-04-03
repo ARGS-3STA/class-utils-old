@@ -21,6 +21,8 @@ class GroupMaker:
 
         random.shuffle(class_list)
 
+        antall = max(antall, 1)
+
         class_length = len(class_list)
         amount_of_groups = class_length / antall
 
@@ -43,6 +45,8 @@ class GroupMaker:
         class_list = self.remove_missing_students(class_list, missing_students)
 
         random.shuffle(class_list)
+
+        antall = max(antall, 1)
 
         groups = [[] for _ in range(antall)]
 

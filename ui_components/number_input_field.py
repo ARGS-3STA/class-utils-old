@@ -114,6 +114,9 @@ class NumberField:
         return update_area
 
     def check_buttons(self, mouse_pos):
+        if self.rect is None:
+            return False
+
         self.is_selected = False
 
         if self.increase_button.is_pressed(

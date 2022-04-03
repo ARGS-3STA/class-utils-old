@@ -46,6 +46,8 @@ class App:
             "MouseMotion": False,
             "Resized": False,
             "ShiftHeld": False,
+            "ScrolledDown": False,
+            "ScrolledUp": False,
             "MousePosition": (0, 0),
             "KeysPressed": [],
         }
@@ -84,6 +86,8 @@ class App:
             "MouseUp": False,
             "MouseMotion": False,
             "Resized": False,
+            "ScrolledDown": False,
+            "ScrolledUp": False,
             "ShiftHeld": self.actions["ShiftHeld"],
             "MousePosition": (0, 0),
             "KeysPressed": [],
@@ -115,6 +119,10 @@ class App:
                         self.actions["MouseUp"] = True
                     case pygame.MOUSEMOTION:
                         self.actions["MouseMotion"] = True
+                    case pygame.MOUSEBUTTONDOWN if event.button == 4:
+                        self.actions["ScrolledUp"] = True
+                    case pygame.MOUSEBUTTONUP if event.button == 5:
+                        self.actions["ScrolledDown"] = True
 
             self.actions["MousePosition"] = pygame.mouse.get_pos()
 

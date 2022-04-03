@@ -1,11 +1,10 @@
 from typing import Any
 
 import pygame
-from utils import *
+from algorithm import DataLoader, GroupMaker
 from pygame import Rect, Surface
-from ui_components import Button, CheckBox, NumberField, TextField
-from algorithm import GroupMaker
-from algorithm import DataLoader
+from ui_components import Button, CheckBox, DropDown, NumberField, TextField
+from utils import *
 
 from .state import App, State
 
@@ -32,7 +31,7 @@ class Groups(State):
 
         self.generate_groups_button = Button(
             1 / 8,
-            5 / 6,
+            5 / 6 - 1 / 8,
             4 / 20,
             4 / 25,
             text="Lag Grupper",
@@ -44,7 +43,7 @@ class Groups(State):
 
         self.grupper_check_box = CheckBox(
             1 / 8,
-            2.5 / 5,
+            2.5 / 5 - 1 / 8,
             2 / 25,
             2 / 25,
             coordinate_position="topright",
@@ -56,7 +55,7 @@ class Groups(State):
         )
         self.students_check_box = CheckBox(
             1 / 8,
-            2.5 / 5,
+            2.5 / 5 - 1 / 8,
             2 / 25,
             2 / 25,
             coordinate_position="topleft",
@@ -68,20 +67,30 @@ class Groups(State):
             state=True,
         )
 
-        self.number_input_field = NumberField(1 / 8, 4 / 6, 1 / 8, 1 / 8)
+        self.number_input_field = NumberField(1 / 8, 4 / 6 - 1 / 8, 1 / 8, 1 / 8)
 
         self.method_text_field = TextField(
-            1 / 8, 2 / 4 - 1 / 16, 0.2, 0.1, text="Grupperings metode"
+            1 / 8, 2 / 4 - 1 / 16 - 1 / 8, 0.2, 0.1, text="Grupperingsmetode"
         )
         self.student_text_field = TextField(
             1 / 8 - 1 / 25,
-            2 / 4 - 1 / 30,
+            2 / 4 - 1 / 30 - 1 / 8,
             2 / 25,
             0.05,
             text="Antall grupper",
         )
         self.groups_text_field = TextField(
-            1 / 8 + 1 / 25, 2 / 4 - 1 / 30, 2 / 25, 0.05, text="Antall personer"
+            1 / 8 + 1 / 25, 2 / 4 - 1 / 30 - 1 / 8, 2 / 25, 0.05, text="Antall personer"
+        )
+
+        self.drop_down_menu = DropDown(
+            1 / 8,
+            2 / 6 - 1 / 8,
+            1 / 5,
+            0.1,
+            self.app,
+            text="Velg Klasseliste",
+            last_element_text="Legg til klasseliste +",
         )
 
     def update(self, actions, deltatime):
@@ -92,44 +101,73 @@ class Groups(State):
         if actions["MouseMotion"]:
             if self.back_button.check_hover(mouse_pos):
                 self.updated = True
-            if self.generate_groups_button.check_hover(mouse_pos):
+            if self.drop_down_menu.check_hover(mouse_pos):
                 self.updated = True
-            if self.grupper_check_box.check_hover(mouse_pos):
-                self.updated = True
-            if self.students_check_box.check_hover(mouse_pos):
-                self.updated = True
-            if self.number_input_field.check_hover(mouse_pos):
-                self.updated = True
+
+            if not self.drop_down_menu.is_expanded:
+                if self.generate_groups_button.check_hover(mouse_pos):
+                    self.updated = True
+                if self.grupper_check_box.check_hover(mouse_pos):
+                    self.updated = True
+                if self.students_check_box.check_hover(mouse_pos):
+                    self.updated = True
+                if self.number_input_field.check_hover(mouse_pos):
+                    self.updated = True
+            else:
+                if self.drop_down_menu.check_button_hovers(mouse_pos):
+                    self.updated = True
+
         if actions["MouseDown"]:
+            self.updated = True
             if self.back_button.is_pressed(mouse_pos):
                 self.exit()
-            if self.grupper_check_box.is_pressed(mouse_pos):
-                self.grupper_check_box.set_state(True)
-                self.students_check_box.set_state(False)
+
+            if not self.drop_down_menu.is_expanded:
+                if self.grupper_check_box.is_pressed(mouse_pos):
+                    self.grupper_check_box.set_state(True)
+                    self.students_check_box.set_state(False)
+                elif self.students_check_box.is_pressed(mouse_pos):
+                    self.students_check_box.set_state(True)
+                    self.grupper_check_box.set_state(False)
+
+                elif self.generate_groups_button.is_pressed(mouse_pos):
+                    if self.students_check_box.state:
+                        print(
+                            self.group_maker.groups_from_students_per_group(
+                                self.drop_down_menu.text,
+                                self.number_input_field.value,
+                                [],
+                            )
+                        )
+                    else:
+                        print(
+                            self.group_maker.groups_from_amounts_of_groups(
+                                self.drop_down_menu.text,
+                                self.number_input_field.value,
+                                [],
+                            )
+                        )
+
+                if self.number_input_field.check_buttons(mouse_pos):
+                    pass
+
+            else:
+                if self.drop_down_menu.check_buttons(mouse_pos):
+                    print("add klasseliste")
+
+            self.drop_down_menu.check_press(mouse_pos)
+
+        if self.drop_down_menu.is_expanded:
+            if actions["ScrolledDown"]:
+                self.drop_down_menu.scroll_down()
                 self.updated = True
-            elif self.students_check_box.is_pressed(mouse_pos):
-                self.students_check_box.set_state(True)
-                self.grupper_check_box.set_state(False)
+            if actions["ScrolledUp"]:
+                self.drop_down_menu.scroll_up()
                 self.updated = True
 
-            elif self.generate_groups_button.is_pressed(mouse_pos):
-                if self.students_check_box.state:
-                    print(
-                        self.group_maker.groups_from_students_per_group(
-                            "1stn", self.number_input_field.value, []
-                        )
-                    )
-                else:
-                    print(
-                        self.group_maker.groups_from_amounts_of_groups(
-                            "1stn", self.number_input_field.value, []
-                        )
-                    )
-
-            if self.number_input_field.check_buttons(mouse_pos):
+        if not self.drop_down_menu.is_expanded:
+            if self.number_input_field.check_key_presses(actions["KeysPressed"]):
                 self.updated = True
-        if self.number_input_field.check_key_presses(actions["KeysPressed"]):
-            self.updated = True
 
     def draw(self, window, screen_width, screen_height):
         if not self.updated and not self.should_draw:
@@ -137,9 +175,9 @@ class Groups(State):
 
         self.should_draw = False
 
-        return [
-            window.fill((255, 255, 255)),
-            self.back_button.draw(window, screen_width, screen_height),
+        window.fill((255, 255, 255))
+
+        if not self.drop_down_menu.is_expanded:
             self.generate_groups_button.draw(window, screen_width, screen_height),
             self.grupper_check_box.draw(window, screen_width, screen_height),
             self.students_check_box.draw(window, screen_width, screen_height),
@@ -147,4 +185,8 @@ class Groups(State):
             self.method_text_field.draw(window, screen_width, screen_height),
             self.student_text_field.draw(window, screen_width, screen_height),
             self.groups_text_field.draw(window, screen_width, screen_height),
+
+        return [
+            self.back_button.draw(window, screen_width, screen_height),
+            self.drop_down_menu.draw(window, screen_width, screen_height),
         ]
