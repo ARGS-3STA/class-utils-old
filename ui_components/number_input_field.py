@@ -10,7 +10,7 @@ class NumberField:
         self.width, self.height = width, height
         self.font = None
 
-        self.value = kwargs.pop("value", 1)
+        self.value = kwargs.pop("value", 0)
         self.color = kwargs.pop("color", (0, 0, 0))
         self.hover_color = kwargs.pop("hover_color", "grey")
 
@@ -100,7 +100,9 @@ class NumberField:
         else:
             font = self.font
 
-        text_surf = font.render(str(self.value), True, self.text_color)
+        text_surf = font.render(
+            str(self.value) + ("|" if self.is_selected else ""), True, self.text_color
+        )
         text_rect = text_surf.get_rect(
             center=pygame.Rect(
                 self.rect.x, self.rect.y, self.rect.width * 0.8, self.rect.height
@@ -123,7 +125,7 @@ class NumberField:
         elif self.decrease_button.is_pressed(
             mouse_pos, x_offset=self.rect.x, y_offset=self.rect.y
         ):
-            if self.value > 1:
+            if self.value > 0:
                 self.value -= 1
                 return True
         elif self.rect.collidepoint(mouse_pos):

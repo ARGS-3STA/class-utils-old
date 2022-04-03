@@ -25,7 +25,7 @@ class GroupMaker:
         amount_of_groups = class_length / antall
 
         if minste_antall_per_gruppe:
-            amount_of_groups = math.floor(amount_of_groups)
+            amount_of_groups = math.floor(amount_of_groups) or 1
         else:
             amount_of_groups = math.ceil(amount_of_groups)
 
