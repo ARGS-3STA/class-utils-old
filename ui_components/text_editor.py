@@ -178,3 +178,5 @@ class GroupText:
         if self.groups:
             self.has_values = True
             self.update = True
+            self.start_index = 0
+            self.stop_index = self.max_viewed_elements - 1

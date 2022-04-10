@@ -93,7 +93,9 @@ class Groups(State):
             last_element_text="Legg til klasseliste +",
         )
 
-        self.group_display = GroupText(4 / 8 + 1 / 16, 0.5, 0.5, 0.9)
+        self.group_display = GroupText(
+            4 / 8 + 1 / 16, 0.5, 0.5, 0.9, max_viewed_elements=20
+        )
 
     def update(self, actions, deltatime):
         self.updated = False
