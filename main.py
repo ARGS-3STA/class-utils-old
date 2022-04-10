@@ -13,15 +13,6 @@ def main() -> None:
 
     data_loader = DataLoader(ASSETS_DIRECTORY)
 
-    class_list = ["Pog"]
-    data_loader.add_class_list(class_list, "temp 2")
-
-    class_list = ["Pog"]
-    data_loader.add_class_list(class_list, "temp 3")
-
-    class_list = ["Pog"]
-    data_loader.add_class_list(class_list, "temp 4")
-
     # seating_plan_generator = SeatingPlanGenerator(data_loader)
 
     # print(seating_plan_generator.generate("1stn", "Rom 205"))

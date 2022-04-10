@@ -3,7 +3,7 @@ from typing import Any
 import pygame
 from algorithm import DataLoader, GroupMaker
 from pygame import Rect, Surface
-from ui_components import Button, CheckBox, DropDown, NumberField, TextField
+from ui_components import Button, CheckBox, DropDown, NumberField, TextField, GroupText
 from utils import *
 
 from .state import App, State
@@ -93,10 +93,15 @@ class Groups(State):
             last_element_text="Legg til klasseliste +",
         )
 
+        self.group_display = GroupText(4 / 8 + 1 / 16, 0.5, 0.5, 0.9)
+
     def update(self, actions, deltatime):
         self.updated = False
 
         mouse_pos = actions["MousePosition"]
+
+        if actions["Resized"]:
+            self.group_display.update = True
 
         if actions["MouseMotion"]:
             if self.back_button.check_hover(mouse_pos):
@@ -132,21 +137,18 @@ class Groups(State):
 
                 elif self.generate_groups_button.is_pressed(mouse_pos):
                     if self.students_check_box.state:
-                        print(
-                            self.group_maker.groups_from_students_per_group(
-                                self.drop_down_menu.text,
-                                self.number_input_field.value,
-                                [],
-                            )
+                        groups = self.group_maker.groups_from_students_per_group(
+                            self.drop_down_menu.text,
+                            self.number_input_field.value,
+                            [],
                         )
                     else:
-                        print(
-                            self.group_maker.groups_from_amounts_of_groups(
-                                self.drop_down_menu.text,
-                                self.number_input_field.value,
-                                [],
-                            )
+                        groups = self.group_maker.groups_from_amounts_of_groups(
+                            self.drop_down_menu.text,
+                            self.number_input_field.value,
+                            [],
                         )
+                    self.group_display.update_groups(groups)
 
                 if self.number_input_field.check_buttons(mouse_pos):
                     pass
@@ -163,6 +165,14 @@ class Groups(State):
                 self.updated = True
             if actions["ScrolledUp"]:
                 self.drop_down_menu.scroll_up()
+                self.updated = True
+
+        if self.group_display.has_values:
+            if actions["ScrolledDown"]:
+                self.group_display.scroll_down()
+                self.updated = True
+            if actions["ScrolledUp"]:
+                self.group_display.scroll_up()
                 self.updated = True
 
         if not self.drop_down_menu.is_expanded:
@@ -189,4 +199,5 @@ class Groups(State):
         return [
             self.back_button.draw(window, screen_width, screen_height),
             self.drop_down_menu.draw(window, screen_width, screen_height),
+            self.group_display.draw(window, screen_width, screen_height),
         ]
