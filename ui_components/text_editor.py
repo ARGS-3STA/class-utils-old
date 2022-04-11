@@ -168,7 +168,7 @@ class GroupText:
 
             index = x % self.groups_per_row
 
-            lines[last_group] += f"gruppe: {x+1}{'|' if not (x%3 == 2) else ''}"
+            lines[last_group] += f"Gruppe {x+1}:{'|' if not (x%3 == 2) else ''}"
             for y, student in enumerate(group):
                 lines[last_group + y + 1] += f"{student}{'|' if not (x%3 == 2) else ''}"
 
