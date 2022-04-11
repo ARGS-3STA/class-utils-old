@@ -104,6 +104,7 @@ class Groups(State):
 
         if actions["Resized"]:
             self.group_display.update = True
+            self.group_display.new_groups = True
 
         if actions["MouseMotion"]:
             if self.back_button.check_hover(mouse_pos):

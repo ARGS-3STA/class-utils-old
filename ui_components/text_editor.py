@@ -43,12 +43,14 @@ class GroupText:
         self.y_offset = kwargs.pop("y_offset", 0)
 
         self.has_values = False
+        self.new_groups = False
 
         self.update = False
 
         self.surface = None
 
         self.groups = []
+        self.text_surfaces = []
 
     def draw(self, window, screen_width, screen_height):
 
@@ -61,6 +63,11 @@ class GroupText:
         if self.surface == None:
             self.surface = pygame.Surface((width, height))
             self.surface.fill((255, 255, 255))
+
+        if self.new_groups:
+            self.new_groups = False
+            self.text_surfaces = []
+            self.create_text_surfaces(screen_width, screen_height)
 
         match self.coordinate_position:
             case "center":
@@ -90,49 +97,10 @@ class GroupText:
         self.surface.fill((255, 255, 255))
 
         if self.groups:
-            lines = [""] * (
-                len(self.groups)
-                * (
-                    math.ceil(
-                        len(self.groups[0]) / min(len(self.groups), self.groups_per_row)
-                    )
-                    + 2
-                )
-            )
-            length = len(self.groups[0])
-            last_group = 0
-            for x, group in enumerate(self.groups):
-
-                index = x % self.groups_per_row
-
-                lines[last_group] += f"gruppe: {x+1}{'|' if not (x%3 == 2) else ''}"
-                for y, student in enumerate(group):
-                    lines[
-                        last_group + y + 1
-                    ] += f"{student}{'|' if not (x%3 == 2) else ''}"
-
-                if index == 2:
-                    last_group += length + 2
-
-            font = lowest_font(
-                [
-                    (
-                        width * 0.6 - self.border_width * 2,
-                        height * 0.6 - self.border_width * 2,
-                        i,
-                        self.font_type,
-                        self.max_font_size,
-                    )
-                    for i in lines
-                ]
-            )
-
-            for x, line in enumerate(lines[self.start_index : self.stop_index + 1]):
-
-                for j, word in enumerate(line.split("|")):
-                    text_surf = font.render(word, True, self.text_color)
-                    # text_rect = text_surf.get_rect(center=self.rect.center)
-
+            for x, line in enumerate(
+                self.text_surfaces[self.start_index : self.stop_index + 1]
+            ):
+                for j, text_surf in enumerate(line):
                     self.surface.blit(
                         text_surf,
                         (
@@ -173,10 +141,55 @@ class GroupText:
             self.stop_index -= 1
             self.update = True
 
+    def create_text_surfaces(self, screen_width, screen_height):
+        width, height = self.width * screen_width, self.height * screen_height
+        lines = [""] * (
+            len(self.groups)
+            * (
+                math.ceil(
+                    len(self.groups[0]) / min(len(self.groups), self.groups_per_row)
+                )
+                + 2
+            )
+        )
+        length = len(self.groups[0])
+        last_group = 0
+        for x, group in enumerate(self.groups):
+
+            index = x % self.groups_per_row
+
+            lines[last_group] += f"gruppe: {x+1}{'|' if not (x%3 == 2) else ''}"
+            for y, student in enumerate(group):
+                lines[last_group + y + 1] += f"{student}{'|' if not (x%3 == 2) else ''}"
+
+            if index == 2:
+                last_group += length + 2
+
+        font = lowest_font(
+            [
+                (
+                    width * 0.6 - self.border_width * 2,
+                    height * 0.6 - self.border_width * 2,
+                    i,
+                    self.font_type,
+                    self.max_font_size,
+                )
+                for i in lines
+            ]
+        )
+
+        for x, line in enumerate(lines):
+            self.text_surfaces.append([])
+            for word in line.split("|"):
+                text_surf = font.render(word, True, self.text_color)
+
+                self.text_surfaces[x].append(text_surf)
+
     def update_groups(self, new_groups):
         self.groups = new_groups
         if self.groups:
             self.has_values = True
             self.update = True
+            self.new_groups = True
             self.start_index = 0
             self.stop_index = self.max_viewed_elements - 1
