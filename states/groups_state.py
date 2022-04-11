@@ -3,7 +3,15 @@ from typing import Any
 import pygame
 from algorithm import DataLoader, GroupMaker
 from pygame import Rect, Surface
-from ui_components import Button, CheckBox, DropDown, NumberField, TextField, GroupText
+from ui_components import (
+    Button,
+    CheckBox,
+    DropDown,
+    NumberField,
+    TextField,
+    GroupText,
+    ScrollBar,
+)
 from utils import *
 
 from .state import App, State
@@ -97,6 +105,10 @@ class Groups(State):
             4 / 8 + 1 / 16, 0.5, 0.5, 0.9, max_viewed_elements=20
         )
 
+        self.scroll_bar = ScrollBar(
+            3 / 8 + 0.5 - 0.048, 0.5, 0.025, 0.9
+        )  # 0.002 % spacing
+
     def update(self, actions, deltatime):
         self.updated = False
 
@@ -172,15 +184,33 @@ class Groups(State):
 
         if self.group_display.has_values:
             if actions["ScrolledDown"]:
-                self.group_display.scroll_down()
+                if self.group_display.scroll_down():
+                    self.scroll_bar.update_values(
+                        self.group_display.start_index,
+                        self.group_display.stop_index,
+                        len(self.group_display.text_surfaces),
+                    )
                 self.updated = True
             if actions["ScrolledUp"]:
-                self.group_display.scroll_up()
+                if self.group_display.scroll_up():
+                    self.scroll_bar.update_values(
+                        self.group_display.start_index,
+                        self.group_display.stop_index,
+                        len(self.group_display.text_surfaces),
+                    )
                 self.updated = True
 
         if not self.drop_down_menu.is_expanded:
             if self.number_input_field.check_key_presses(actions["KeysPressed"]):
                 self.updated = True
+
+        if self.group_display.update_scroll_bar:
+            self.scroll_bar.update_values(
+                self.group_display.start_index,
+                self.group_display.stop_index,
+                len(self.group_display.text_surfaces),
+            )
+            self.updated = True
 
     def draw(self, window, screen_width, screen_height):
         if not self.updated and not self.should_draw:
@@ -203,4 +233,5 @@ class Groups(State):
             self.back_button.draw(window, screen_width, screen_height),
             self.drop_down_menu.draw(window, screen_width, screen_height),
             self.group_display.draw(window, screen_width, screen_height),
+            self.scroll_bar.draw(window, screen_width, screen_height),
         ]

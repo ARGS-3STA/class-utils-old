@@ -1,6 +1,7 @@
 import pygame
 import math
 from utils import lowest_font
+from .scroll_bar import ScrollBar
 
 
 class GroupText:
@@ -46,6 +47,7 @@ class GroupText:
         self.new_groups = False
 
         self.update = False
+        self.update_scroll_bar = False
 
         self.surface = None
 
@@ -56,6 +58,8 @@ class GroupText:
 
         x, y = self.x * screen_width, self.y * screen_height
         width, height = self.width * screen_width, self.height * screen_height
+
+        self.update_scroll_bar = False
 
         if self.update:
             self.surface = pygame.Surface((width, height))
@@ -68,6 +72,7 @@ class GroupText:
             self.new_groups = False
             self.text_surfaces = []
             self.create_text_surfaces(screen_width, screen_height)
+            self.update_scroll_bar = True
 
         match self.coordinate_position:
             case "center":
@@ -82,6 +87,7 @@ class GroupText:
                 self.rect = self.surface.get_rect(bottomleft=(x, y))
 
         if not self.update:
+
             window.blit(self.surface, self.rect)
 
             update_area = pygame.draw.rect(
@@ -108,7 +114,6 @@ class GroupText:
                             20 + (x) * height // (self.max_viewed_elements),
                         ),
                     )
-
         update_area = window.blit(self.surface, self.rect)
 
         update_area = pygame.draw.rect(
@@ -122,37 +127,42 @@ class GroupText:
         return update_area
 
     def scroll_down(self):
-        if self.stop_index < (
-            len(self.groups)
-            * (
-                math.ceil(
-                    len(self.groups[0]) / min(len(self.groups), self.groups_per_row)
-                )
-                + 2
-            )
-        ):
+        if self.stop_index < math.ceil(len(self.groups) / self.groups_per_row) * len(
+            self.groups[0]
+        ) + 3 * math.ceil(len(self.groups) / self.groups_per_row):
             self.start_index += 1
             self.stop_index += 1
             self.update = True
+            return True
+        return False
 
     def scroll_up(self):
         if self.start_index > 0:
             self.start_index -= 1
             self.stop_index -= 1
             self.update = True
+            return True
+        return False
+
+    def number_of_students(self, groups):
+        ret_val = 0
+        for group in groups:
+            ret_val += len(group)
+        return ret_val
 
     def create_text_surfaces(self, screen_width, screen_height):
         width, height = self.width * screen_width, self.height * screen_height
+        if not self.groups:
+            return
+
+        length = len(self.groups[0])
         lines = [""] * (
-            len(self.groups)
-            * (
-                math.ceil(
-                    len(self.groups[0]) / min(len(self.groups), self.groups_per_row)
-                )
-                + 2
+            (
+                math.ceil(len(self.groups) / self.groups_per_row) * length
+                + 3 * math.ceil(len(self.groups) / self.groups_per_row)
             )
         )
-        length = len(self.groups[0])
+        print(len(lines))
         last_group = 0
         for x, group in enumerate(self.groups):
 
@@ -193,3 +203,5 @@ class GroupText:
             self.new_groups = True
             self.start_index = 0
             self.stop_index = self.max_viewed_elements - 1
+            return True
+        return False
